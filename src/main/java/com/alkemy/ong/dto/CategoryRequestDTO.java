@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryDto {
+public class CategoryRequestDTO {
 
     private Long categoryId;
 

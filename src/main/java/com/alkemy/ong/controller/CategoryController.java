@@ -1,12 +1,11 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.CategoryDto;
+import com.alkemy.ong.dto.CategoryRequestDTO;
 import com.alkemy.ong.dto.response.CategoryResponseDTO;
 import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.service.CategoryService;
 
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
 
 import com.alkemy.ong.util.CategoryResponse;
@@ -26,22 +25,22 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping()
-    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDto categoryDto,
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
                                             BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryRequestDTO));
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CategoryDto> categoryDetail(@PathVariable("id") Long id) {
-        CategoryDto responseCategoryDto = categoryService.findById(id);
-        return ResponseEntity.ok().body(responseCategoryDto);
+    public ResponseEntity<CategoryRequestDTO> categoryDetail(@PathVariable("id") Long id) {
+        CategoryRequestDTO responseCategoryRequestDTO = categoryService.findById(id);
+        return ResponseEntity.ok().body(responseCategoryRequestDTO);
     }
 
     @GetMapping("/pagination")
@@ -60,8 +59,8 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
-        CategoryResponseDTO response = categoryService.update(id, categoryDto);
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        CategoryResponseDTO response = categoryService.update(id, categoryRequestDTO);
         return ResponseEntity.ok().body(response);
     }
 
