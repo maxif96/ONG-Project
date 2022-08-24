@@ -11,7 +11,6 @@ import java.util.List;
 public interface CategoryService {
 
     CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) throws Exception;
-     CategoryRequestDTO findById(Long id);
     CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException;
     List<String> getCategoryNames() throws EmptyListException;
     CategoryResponseDTO update (Long id, CategoryRequestDTO categoryRequestDTO);

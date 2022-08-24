@@ -56,7 +56,7 @@ public class Category {
     private Date updateDate;
 
     @Column
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 
     public Category(String name, String description, String image, Date createDate) {
         this.name = name;

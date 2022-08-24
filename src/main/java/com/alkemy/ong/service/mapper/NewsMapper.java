@@ -4,10 +4,12 @@ import com.alkemy.ong.dto.NewsDto;
 import com.alkemy.ong.dto.response.NewsPageResponse;
 import com.alkemy.ong.dto.response.NewsResponse;
 import com.alkemy.ong.model.News;
+import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +18,11 @@ import java.util.List;
 public class NewsMapper {
 
     @Autowired
-    CategoryService categoryService;
-
+    private CategoryService categoryService;
     @Autowired
-    CategoryMapper categoryMapper;
+    private CategoryMapper categoryMapper;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public NewsDto newsEntityToDTO (News news) {
         return NewsDto
@@ -40,8 +43,9 @@ public class NewsMapper {
                 .content(newsDto.getContent())
                 .name(newsDto.getName())
                 .image(newsDto.getImage())
-                .categoryId(categoryMapper.DTOToEntity(
-                        categoryService.findById(newsDto.getCategoryId())))
+                .categoryId(categoryRepository
+                        .findById(newsDto.getCategoryId())
+                        .orElseThrow(() -> new EntityNotFoundException("Category doesn't found")))
                 .createDate(newsDto.getCreateDate())
                 .updateDate(new Date())
                 .build();
@@ -54,8 +58,9 @@ public class NewsMapper {
                 .content(newsDto.getContent())
                 .name(newsDto.getName())
                 .image(newsDto.getImage())
-                .categoryId(categoryMapper.DTOToEntity(
-                        categoryService.findById(newsDto.getCategoryId())))
+                .categoryId(categoryRepository
+                        .findById(newsDto.getCategoryId())
+                        .orElseThrow(() -> new EntityNotFoundException("Category doesn't found.")))
                 .createDate(newsDto.getCreateDate())
                 .updateDate(new Date())
                 .build();

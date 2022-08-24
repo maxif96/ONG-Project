@@ -2,6 +2,7 @@
 package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.CategoryRequestDTO;
+import com.alkemy.ong.dto.response.CategoryPageResponse;
 import com.alkemy.ong.dto.response.CategoryResponseDTO;
 import com.alkemy.ong.model.Category;
 import org.springframework.stereotype.Component;
@@ -9,21 +10,19 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Component
 public class CategoryMapper {
     
 
 
-    public Category DTOToEntity(CategoryRequestDTO categoryRequestDTO){
+    public Category RequestDTOToEntity(CategoryRequestDTO categoryRequestDTO){
         return Category
                 .builder()
-                .id(categoryRequestDTO.getCategoryId())
                 .name(categoryRequestDTO.getName())
                 .image(categoryRequestDTO.getImage())
                 .description(categoryRequestDTO.getDescription())
-                .updateDate(new Date())
+                .createDate(new Date())
                 .build();
     }
 
@@ -34,7 +33,6 @@ public class CategoryMapper {
                 .name(category.getName())
                 .image(category.getImage())
                 .description(category.getDescription())
-                .updateDate(category.getUpdateDate())
                 .build();
     }
 
@@ -54,4 +52,13 @@ public class CategoryMapper {
         categories.forEach((p) -> categoryResponseDTOList.add(entityToResponseDTO(p)));
         return categoryResponseDTOList;
     }
+
+    public CategoryPageResponse buildPageResponse (List<Category> categories, String previous, String next){
+        return CategoryPageResponse.builder()
+                .categories(entityListToResponseDTO(categories))
+                .previous(previous)
+                .next(next)
+                .build();
+    }
+
 }

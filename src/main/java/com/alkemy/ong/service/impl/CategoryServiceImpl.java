@@ -9,7 +9,7 @@ import com.alkemy.ong.model.Category;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.mapper.CategoryMapper;
-import java.util.Optional;
+
 import javax.persistence.EntityNotFoundException;
 
 import com.alkemy.ong.util.PaginationUtil;
@@ -34,11 +34,10 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
 
     @Transactional
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) throws Exception {
-        Category category = repository
-                .findByName(categoryRequestDTO.getName())
-                .orElseThrow(() ->new AlreadyExistsException(
-                        messageSource.getMessage("error.category.already.exists", null, Locale.US)));
-        return categoryMapper.entityToResponseDTO(repository.save(category));
+        if (repository.existsByName(categoryRequestDTO.getName())) throw new AlreadyExistsException(
+                messageSource.getMessage("error.category.already.exists", null, Locale.US));
+        Category categoryToSave = categoryMapper.RequestDTOToEntity(categoryRequestDTO);
+        return categoryMapper.entityToResponseDTO(repository.save(categoryToSave));
     }
 
     public CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException {
@@ -48,41 +47,32 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         String previousUrl = urlGetPrevious(numberOfPage);
         String nextUrl = urlGetNext(page, numberOfPage);
 
-
-
+        if (page.getTotalPages() < numberOfPage)
+            throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
+        return categoryMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
     public List<String> getCategoryNames() throws EmptyListException {
-        if (categoryRepository.findAllCategoryNames().isEmpty())
+        if (repository.findAllCategoryNames().isEmpty())
             throw new EmptyListException(messageSource.getMessage("error.categorylist.empty", null, Locale.US));
-        return categoryRepository.findAllCategoryNames();
+        return repository.findAllCategoryNames();
     }
 
     @Transactional
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Category category = categoryRepository
+        Category category = repository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Category " + messageSource.getMessage("not.found", null, Locale.US)));
         category = categoryMapper.updateCategory(category, categoryRequestDTO);
-        return categoryMapper.entityToResponseDTO(categoryRepository.save(category));
+        return categoryMapper.entityToResponseDTO(repository.save(category));
     }
 
-//    @Override
-//    public CategoryRequestDTO findById(Long id) {
-//        Optional<Category> res = categoryRepository.findById(id);
-//        if (res.isPresent()) {
-//            Category category = res.get();
-//            return categoryMapper.categoryToCategoryDTO(category);
-//        } else {
-//           throw new EntityNotFoundException(messageSource.getMessage("category.notFound", null, Locale.US));
-//        }
-//    }
 
     @Override
     public void deleteCategory(Long id) {
-        categoryRepository.findById(id)
+        repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
-        categoryRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

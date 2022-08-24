@@ -17,6 +17,5 @@ public class CategoryResponseDTO {
 
     private String image;
 
-    private Date updateDate;
 
 }
