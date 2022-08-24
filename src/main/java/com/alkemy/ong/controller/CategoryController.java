@@ -26,16 +26,10 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) throws Exception {
         return ResponseEntity.ok().body(categoryService.createCategory(categoryRequestDTO));
     }
-
-//    @GetMapping(path = "/{id}")
-//    public ResponseEntity<CategoryRequestDTO> categoryDetail(@PathVariable("id") Long id) {
-//        CategoryRequestDTO responseCategoryRequestDTO = categoryService.findById(id);
-//        return ResponseEntity.ok().body(responseCategoryRequestDTO);
-//    }
 
     @GetMapping("/get-all")
     public ResponseEntity<CategoryPageResponse> categoriesPage (@RequestParam(defaultValue = "1") Integer page) throws NotFoundException {
@@ -55,8 +49,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id){
         categoryService.deleteCategory(id);
+        return ResponseEntity.ok().build();
     }
 }

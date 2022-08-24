@@ -68,11 +68,8 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         return categoryMapper.entityToResponseDTO(repository.save(category));
     }
 
-
-    @Override
     public void deleteCategory(Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+        if(repository.existsById(id)) throw  new EntityNotFoundException(" Category with that id was not found.");
         repository.deleteById(id);
     }
 }
