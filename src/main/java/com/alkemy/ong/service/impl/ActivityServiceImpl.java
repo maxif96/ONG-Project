@@ -31,8 +31,7 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityResponseDTO update(Long id, ActivityRequestDTO activityRequestDTO) {
         Activity activity = activityRepository
                 .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundException(
                                 "Activity " + messageSource.getMessage(
                                         "not.found", null, Locale.US)));
 
@@ -50,4 +49,7 @@ public class ActivityServiceImpl implements ActivityService {
         Activity activitySaved = activityRepository.save(activity);
         return activityMapper.entityToResponseDTO(activitySaved);
     }
+
+
+
 }
