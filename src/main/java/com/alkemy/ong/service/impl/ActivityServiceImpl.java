@@ -33,8 +33,7 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
     public ActivityResponseDTO update(Long id, ActivityRequestDTO activityRequestDTO) {
         Activity activity = repository
                 .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundException(
                                 "Activity " + messageSource.getMessage(
                                         "not.found", null, Locale.US)));
 

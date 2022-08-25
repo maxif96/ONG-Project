@@ -6,6 +6,8 @@ import com.alkemy.ong.dto.response.ActivityResponseDTO;
 import com.alkemy.ong.exception.NameAlreadyExists;
 import javassist.NotFoundException;
 
+import java.util.List;
+
 public interface ActivityService {
 
     ActivityResponseDTO update (Long id, ActivityRequestDTO activityRequestDTO);
