@@ -2,7 +2,7 @@ package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.NewsDto;
 import com.alkemy.ong.dto.response.NewsPageResponse;
-import com.alkemy.ong.dto.response.NewsResponse;
+import com.alkemy.ong.dto.response.NewsResponseDTO;
 import com.alkemy.ong.model.News;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
@@ -66,8 +66,8 @@ public class NewsMapper {
                 .build();
     }
 
-    public NewsResponse entityToResponse (News newEntity){
-        return NewsResponse.builder()
+    public NewsResponseDTO entityToResponse (News newEntity){
+        return NewsResponseDTO.builder()
                 .id(newEntity.getId())
                 .name(newEntity.getName())
                 .image(newEntity.getImage())
@@ -77,16 +77,13 @@ public class NewsMapper {
                 .build();
     }
 
-    public List<NewsResponse> entityListToResponseList (List<News> newsList){
-        List<NewsResponse> newsResponseList = new ArrayList<>();
-        for (News newEntity : newsList){
-            newsResponseList.add(entityToResponse(newEntity));
-        }
-
-        return newsResponseList;
+    public List<NewsResponseDTO> entityListToResponseList (List<News> newsList){
+        List<NewsResponseDTO> newsResponseDTOList = new ArrayList<>();
+        newsList.forEach(p -> newsResponseDTOList.add(entityToResponse(p)));
+        return  newsResponseDTOList;
     }
 
-    public NewsPageResponse entityPageToPageResponse (List<News> members, String previous, String next){
+    public NewsPageResponse buildPageResponse(List<News> members, String previous, String next){
         return NewsPageResponse.builder()
                 .news(entityListToResponseList(members))
                 .previous(previous)

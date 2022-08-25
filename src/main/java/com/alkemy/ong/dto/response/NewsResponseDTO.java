@@ -1,6 +1,5 @@
 package com.alkemy.ong.dto.response;
 
-import com.alkemy.ong.model.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 import java.util.Date;
 @Getter @Setter
 @Builder
-public class NewsResponse {
+public class NewsResponseDTO {
 
     private Long id;
     private String name;

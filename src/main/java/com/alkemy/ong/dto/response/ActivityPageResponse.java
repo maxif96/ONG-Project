@@ -11,10 +11,10 @@ import java.util.List;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class NewsPageResponse {
+public class ActivityPageResponse {
 
-    List<NewsResponseDTO> news;
-    private String previous;
-    private String next;
+    private List<ActivityResponseDTO> activities;
+    private String previousUrl;
+    private String nextUrl;
 
 }

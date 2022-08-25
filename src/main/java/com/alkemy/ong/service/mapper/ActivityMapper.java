@@ -1,11 +1,14 @@
 package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.ActivityRequestDTO;
+import com.alkemy.ong.dto.response.ActivityPageResponse;
 import com.alkemy.ong.dto.response.ActivityResponseDTO;
 import com.alkemy.ong.model.Activity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class ActivityMapper {
@@ -18,7 +21,6 @@ public class ActivityMapper {
                 .content(request.getContent())
                 .createAt(entityFromDB.getCreateAt())
                 .updateAt(new Date())
-                .deleted(entityFromDB.isDeleted())
                 .build();
     }
 
@@ -42,4 +44,19 @@ public class ActivityMapper {
                 .createAt(new Date())
                 .build();
     }
+
+    private List<ActivityResponseDTO> entityListToResponseDTO(List<Activity> activities) {
+        List<ActivityResponseDTO> activityResponseDTOList = new ArrayList<>();
+        activities.forEach(p -> activityResponseDTOList.add(entityToResponseDTO(p)));
+        return activityResponseDTOList;
+    }
+
+    public ActivityPageResponse buildPageResponse(List<Activity> activities, String previousUrl, String nextUrl) {
+        return ActivityPageResponse.builder()
+                .activities(entityListToResponseDTO(activities))
+                .nextUrl(nextUrl)
+                .previousUrl(previousUrl)
+                .build();
+    }
+
 }
