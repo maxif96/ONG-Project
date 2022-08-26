@@ -1,7 +1,7 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.auth.utils.JwUtils;
-import com.alkemy.ong.dto.CommentDto;
+import com.alkemy.ong.dto.CommentRequestDTO;
 
 import com.alkemy.ong.dto.response.UserResponseDTO;
 import com.alkemy.ong.exception.ForbiddenUpdate;
@@ -19,6 +19,9 @@ import com.alkemy.ong.service.ICommentService;
 import com.alkemy.ong.service.UserService;
 import com.alkemy.ong.service.mapper.comment.CommentMapper;
 import java.util.ArrayList;
+
+import com.alkemy.ong.util.PaginationUtil;
+import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,52 +35,42 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentServiceImpl implements ICommentService {
-
+public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRepository> implements ICommentService {
 
     @Autowired
-    private CommentRepository commentRepository;
-    @Autowired private UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private CommentMapper commentMapper;
-
-
-    @Autowired private UserService userService;
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private NewsRepository newsRepository;
-
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     private JwUtils jwUtil;
 
-
-    @Override
     @Transactional
-    public CommentResponseDTO save(CommentDto dto, HttpServletRequest request) {
-        try {
+    public CommentResponseDTO save(CommentRequestDTO dto, HttpServletRequest request) throws Exception {
             final String authorizationHeader = request.getHeader("Authorization");
 
             String email = jwUtil.extractUsername(authorizationHeader.substring(7));
-            Users loggedUser = userRepository.findByEmail(email);
+            Users loggedUser = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("You may be logged to leave a comment."));
 
-            Comment comment = commentMapper.dtoToComment(dto, loggedUser.getId());
-            Comment commentSaved = commentRepository.save(comment);
-            return commentMapper.commentToResponseDto(commentSaved);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            Comment commentToSave = commentMapper.entityToDTO(dto, loggedUser.getId());
+
+            return commentMapper.commentToResponseDto(repository.save(commentToSave));
+
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) throws NotFoundException {
         try {
-            Optional<Comment> comment = commentRepository.findById(id);
+            Optional<Comment> comment = repository.findById(id);
             if (comment.isPresent()) {
-                commentRepository.deleteById(id);
+                repository.deleteById(id);
             }
         } catch (Exception e) {
             throw new NotFoundException(messageSource.getMessage("error.comment.notFound", null, Locale.US));
@@ -86,20 +79,21 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
 
-    public CommentResponseDTO updateComment(CommentDto commentDto, Long id, String token) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment","id",id));
-
-        UserResponseDTO userResponseDTO = userService.getUserDataByToken(token);
-
-        if( !(comment.getUser().getEmail().equals(userResponseDTO.getEmail())
-                || userRepository.findByEmail(userResponseDTO.getEmail()).getRole()
-                .getName().equals("ROLE_ADMIN")  ) )
-        {
-            throw new ForbiddenUpdate("comment","id",id);
-        }
-        comment.setBody(commentDto.getBody());
-        return commentMapper.commentToResponseDto(commentRepository.save(comment));
+    public CommentResponseDTO updateComment(CommentRequestDTO commentRequestDTO, Long id, String token) {
+//        Comment comment = repository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Comment","id",id));
+//
+//        UserResponseDTO userResponseDTO = userService.getUserDataByToken(token);
+//
+//        if( !(comment.getUser().getEmail().equals(userResponseDTO.getEmail())
+//                || userRepository.findByEmail(userResponseDTO.getEmail()).getRole()
+//                .getName().equals("ROLE_ADMIN")  ) )
+//        {
+//            throw new ForbiddenUpdate("comment","id",id);
+//        }
+//        comment.setBody(commentRequestDTO.getBody());
+//        return commentMapper.commentToResponseDto(repository.save(comment));
+        return null;
     }
 
     public List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception {
@@ -108,7 +102,7 @@ public class CommentServiceImpl implements ICommentService {
         if (!response.isPresent()) {
             throw new EntityNotFoundException(messageSource.getMessage("news.notFound", null, Locale.US));
         } else {
-            List<Comment> comments = commentRepository.findCommentByNewsId(newsId);
+            List<Comment> comments = repository.findCommentByNewsId(newsId);
             if (comments.isEmpty()) {
                 throw new Exception(messageSource.getMessage("news.comment.empty", null, Locale.US));
             } else {
@@ -124,7 +118,7 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public CommentResponseDTO findById(Long id) {
-        Optional<Comment> res = commentRepository.findById(id);
+        Optional<Comment> res = repository.findById(id);
         if (res.isPresent()) {
             Comment comment = res.get();
             return commentMapper.entityToResponseDTO(comment);
@@ -136,7 +130,7 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentResponseDTO> getAllResponseDto() {
-        return commentRepository.findAllByOrderByCreateAtAsc()
+        return repository.findAllByOrderByCreateAtAsc()
                 .stream()
                 .map(comment -> commentMapper.commentToResponseDto(comment))
                 .collect(Collectors.toList());

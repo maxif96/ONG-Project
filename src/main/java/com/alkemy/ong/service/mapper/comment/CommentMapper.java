@@ -1,14 +1,11 @@
 package com.alkemy.ong.service.mapper.comment;
 
-import com.alkemy.ong.dto.CommentDto;
+import com.alkemy.ong.dto.CommentRequestDTO;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.model.Comment;
-import com.alkemy.ong.model.News;
-import com.alkemy.ong.model.Users;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +22,11 @@ public class CommentMapper {
     public CommentMapper() {
     }
 
-    public CommentDto commentToDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setBody(comment.getBody());
-        commentDto.setNewsId(comment.getNews().getId());
-        return commentDto;
+    public CommentRequestDTO commentToDto(Comment comment) {
+        CommentRequestDTO commentRequestDTO = new CommentRequestDTO();
+        commentRequestDTO.setBody(comment.getBody());
+        commentRequestDTO.setNewsId(comment.getNews().getId());
+        return commentRequestDTO;
     }
 
     public CommentResponseDTO entityToResponseDTO (Comment comment){
@@ -41,14 +38,13 @@ public class CommentMapper {
                 .build();
     }
 
-    public Comment dtoToComment(CommentDto dto, Long userId) throws Exception{
-        Users user = usersRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-        News news = newsRepository.findById(dto.getNewsId()).orElseThrow(() -> new EntityNotFoundException("New with that id not found."));
-
+    public Comment entityToDTO(CommentRequestDTO requestDTO, Long userId) {
         return Comment.builder()
-                .body(dto.getBody())
-                .user(user)
-                .news(news)
+                .body(requestDTO.getBody())
+                .user(usersRepository.findById(userId)
+                        .orElseThrow(() -> new UserNotFoundException("User with that id not found")))
+                .news(newsRepository.findById(requestDTO.getNewsId())
+                        .orElseThrow(() -> new EntityNotFoundException("New with that id not found.")))
                 .build();
     }
 

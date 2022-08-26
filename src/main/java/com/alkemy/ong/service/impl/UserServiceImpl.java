@@ -8,6 +8,7 @@ import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.UserService;
 import com.alkemy.ong.service.mapper.UsersMapper;
+import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -52,8 +53,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getUserDataByToken(String token) {
-        String userName = jwUtils.extractUsername(token.substring(7));
-        Users users = userRepository.findByEmail(userName);
+        String email = jwUtils.extractUsername(token.substring(7));
+        Users users = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with that email was not found."));
         return usersMapper.userEntityToDTO(users);
     }
 
@@ -81,13 +84,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO findByEmail(String email) {
-        Optional<Users> res = Optional.ofNullable(userRepository.findByEmail(email));
-        if (res.isPresent()) {
-            Users user = res.get();
-            return usersMapper.userEntityToDTO(user);
-        } else {
-            throw new EntityNotFoundException(messageSource.getMessage("error.user.notFound", null, Locale.US));
-        }
+        Users user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with that email was not found."));
+        return usersMapper.userEntityToDTO(user);
     }
 
 }

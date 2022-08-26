@@ -1,11 +1,7 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.CommentDto;
-import com.alkemy.ong.dto.response.UserResponseDTO;
+import com.alkemy.ong.dto.CommentRequestDTO;
 import com.alkemy.ong.exception.ApiError;
-import com.alkemy.ong.model.Comment;
-import com.alkemy.ong.model.Users;
-import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.service.ICommentService;
 import com.alkemy.ong.service.UserService;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +21,6 @@ import javax.validation.Valid;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.List;
-import java.util.Locale;
 
 
 @RestController
@@ -43,20 +37,21 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentResponseDTO> addComment(
-            @Valid @RequestBody CommentDto commentDto, HttpServletRequest request){
-        return new ResponseEntity<>(commentService.save(commentDto, request), HttpStatus.CREATED);
+            @Valid @RequestBody CommentRequestDTO commentRequestDTO, HttpServletRequest request) throws Exception {
+        CommentResponseDTO commentSaved = commentService.save(commentRequestDTO, request);
+        return ResponseEntity.ok().body(commentSaved);
     }
 
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDTO> updateComment(
             @Valid
-            @RequestBody CommentDto commentDto,
+            @RequestBody CommentRequestDTO commentRequestDTO,
             @PathVariable("id") Long id,
             @RequestHeader(name = "Authorization") String token
     ){
         return new ResponseEntity<>(commentService
-                .updateComment(commentDto, id, token), HttpStatus.OK);
+                .updateComment(commentRequestDTO, id, token), HttpStatus.OK);
     }
 
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDto {
+public class CommentRequestDTO {
 
     @NotBlank(message = "body can't be empty")
     @NotNull(message = "body can't be null")

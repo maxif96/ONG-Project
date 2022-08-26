@@ -10,6 +10,7 @@ import com.alkemy.ong.model.Users;
 import com.alkemy.ong.repository.RoleRepository;
 import com.alkemy.ong.repository.UserRepository;
 import com.alkemy.ong.service.MailService;
+import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import com.amazonaws.services.kms.model.AlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 @Service
 public class UserDetailsCustomService implements UserDetailsService {
@@ -57,8 +59,7 @@ public class UserDetailsCustomService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Users user = userRepository.findByEmail(email);
-        if(user == null) throw new UsernameNotFoundException("Username not found");
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with that email not found."));
 
         Collection<GrantedAuthority> authorities = Collections
                 .singleton(new SimpleGrantedAuthority(user.getRole().getName()));
@@ -70,7 +71,7 @@ public class UserDetailsCustomService implements UserDetailsService {
     @Transactional
     public Jwt save (UserDTO userDTO) throws IOException, EmailAlreadyExists {
         String encryptPass = passwordEncoder.encode(userDTO.getPassword());
-        if (userRepository.findByEmail(userDTO.getEmail()) != null) throw new EmailAlreadyExists("Email is already in use");
+        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()) throw new EmailAlreadyExists("Email is already in use");
         Users user = userMapper.userDTOtoEntity(userDTO);
         user.setPassword(encryptPass);
         user.setRole(roleRepository.findByName("ROLE_USER"));

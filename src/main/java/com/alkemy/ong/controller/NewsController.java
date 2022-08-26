@@ -1,19 +1,14 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.CommentDto;
 import com.alkemy.ong.dto.NewsDto;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.dto.response.NewsPageResponse;
-import com.alkemy.ong.exception.ApiError;
-import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.impl.CommentServiceImpl;
 import com.alkemy.ong.util.documentation.NewsDocumentation;
-import com.amazonaws.services.kms.model.AlreadyExistsException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
