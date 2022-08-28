@@ -11,18 +11,9 @@ import java.util.List;
 public interface CommentService {
 
     CommentResponseDTO save(CommentRequestDTO dto, HttpServletRequest request) throws Exception;
-
-    void deleteById(Long id) throws NotFoundException;
-
-
+    void deleteById(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException;
     CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException;
-
-
     List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception;
-
-    CommentResponseDTO findById(Long id);
-
     List<CommentResponseDTO> getAllResponseDto();
-
 
 }

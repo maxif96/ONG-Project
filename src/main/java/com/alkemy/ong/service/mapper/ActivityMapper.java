@@ -49,9 +49,9 @@ public class ActivityMapper {
     }
 
     private List<ActivityResponseDTO> entityListToResponseDTO(List<Activity> activities) {
-        List<ActivityResponseDTO> activityResponseDTOList = new ArrayList<>();
-        activities.forEach(p -> activityResponseDTOList.add(entityToResponseDTO(p)));
-        return activityResponseDTOList;
+        return activities.stream()
+                .map(this::entityToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     public ActivityPageResponse buildPageResponse(List<Activity> activities, String previousUrl, String nextUrl) {

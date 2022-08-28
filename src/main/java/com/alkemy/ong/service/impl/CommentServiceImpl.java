@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRepository> implements CommentService {
@@ -63,11 +64,17 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     }
 
     @Transactional
-    public void deleteById(Long id) throws NotFoundException {
-        if(repository.existsById(id)) repository.deleteById(id);
-        else throw new NotFoundException(messageSource.getMessage("error.comment.notFound", null, Locale.US));
-    }
+    public void deleteById(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException {
 
+        String authorizationHeader = request.getHeader("Authorization");
+
+        String emailLogged = jwUtil.extractUsername(authorizationHeader.substring(7));
+        Comment comment = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment was not found."));
+        String emailFromComment = comment.getUser().getEmail();
+        if (!emailLogged.equalsIgnoreCase(emailFromComment)) throw new UnauthorizedException("You don't have authorization to delete this comment");
+        repository.deleteById(id);
+
+    }
 
     public CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException {
         String emailFromRequest = jwUtil.extractUsername(token.substring(7));
@@ -81,24 +88,11 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     }
 
     public List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception {
-        List<CommentResponseDTO> responseList = new ArrayList<>();
-        for (Comment comment : repository.findAllByNewsId(newsId)){
-            responseList.add(commentMapper.entityToResponseDTO(comment));
-        }
-        return responseList;
+       return repository.findAllByNewsId(newsId)
+               .stream()
+                .map(p -> commentMapper.entityToResponseDTO(p))
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public CommentResponseDTO findById(Long id) {
-        Optional<Comment> res = repository.findById(id);
-        if (res.isPresent()) {
-            Comment comment = res.get();
-            return commentMapper.entityToResponseDTO(comment);
-        } else {
-            throw new EntityNotFoundException(messageSource.getMessage("error.comment.notFound", null, Locale.US));
-        }
-    }
-
     @Override
     @Transactional(readOnly = true)
     public List<CommentResponseDTO> getAllResponseDto() {

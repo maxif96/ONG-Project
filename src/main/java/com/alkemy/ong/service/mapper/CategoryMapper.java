@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CategoryMapper {
@@ -48,9 +49,9 @@ public class CategoryMapper {
     }
 
     public List<CategoryResponseDTO> entityListToResponseDTO (List<Category> categories){
-        List<CategoryResponseDTO> categoryResponseDTOList = new ArrayList<>();
-        categories.forEach((p) -> categoryResponseDTOList.add(entityToResponseDTO(p)));
-        return categoryResponseDTOList;
+        return categories.stream()
+                .map(this::entityToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     public CategoryPageResponse buildPageResponse (List<Category> categories, String previous, String next){

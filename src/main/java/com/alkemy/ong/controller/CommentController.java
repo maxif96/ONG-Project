@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.exception.UnauthorizedException;
 import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
-
-
-    @Autowired private CommentService commentService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private MessageSource messageSource;
     @Autowired
@@ -37,7 +37,7 @@ public class CommentController {
 
 
     @PostMapping
-    public ResponseEntity<CommentResponseDTO> addComment(
+    public ResponseEntity<CommentResponseDTO> save(
             @Valid @RequestBody CommentRequestDTO commentRequestDTO, HttpServletRequest request) throws Exception {
         CommentResponseDTO commentSaved = commentService.save(commentRequestDTO, request);
         return ResponseEntity.ok().body(commentSaved);
@@ -45,41 +45,17 @@ public class CommentController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentResponseDTO> updateComment(
-            @Valid
-            @RequestBody CommentRequestDTO commentRequestDTO,
-            @PathVariable("id") Long id,
-            @RequestHeader(name = "Authorization") String token
-    ) throws UnauthorizedException {
-        return new ResponseEntity<>(commentService
-                .update(commentRequestDTO, id, token), HttpStatus.OK);
+    public ResponseEntity<CommentResponseDTO> update(
+            @Valid @RequestBody CommentRequestDTO commentRequestDTO,
+            @PathVariable("id") Long id, @RequestHeader(name = "Authorization") String token) throws UnauthorizedException {
+        return ResponseEntity.ok().body(commentService.update(commentRequestDTO, id, token));
     }
 
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> removeComment(@PathVariable(value = "id") Long id) {
-        try {
-            Authentication userCommentIdObject = SecurityContextHolder.getContext().getAuthentication();
-            boolean hasAdminRole = userCommentIdObject.getAuthorities().stream()
-                    .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-            Long commentId= commentService.findById(id).getUserId();
-            String name = userCommentIdObject.getName();
-            Long userId =userService.findByEmail(name).getId();
-            if (hasAdminRole)
-            {
-                commentService.deleteById(id);
-                return ResponseEntity.ok()
-                        .body(messageSource.getMessage("deleted.comment", null, Locale.US));
-            }
-            if (!Objects.equals(userId, commentId)){
-                return new ResponseEntity<>((messageSource.getMessage("notallowed.permission", null, Locale.US)), HttpStatus.FORBIDDEN);
-            }
-            commentService.deleteById(id);
-            return ResponseEntity.ok()
-                    .body(messageSource.getMessage("deleted.comment", null, Locale.US));
-        } catch (Exception exception) {
-            throw new ApiError(HttpStatus.NOT_FOUND, exception);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(value = "id") Long id, HttpServletRequest request) throws UnauthorizedException, NotFoundException {
+        commentService.deleteById(id, request);
+        return ResponseEntity.ok().body("Comment successfully deleted.");
     }
 
     @GetMapping
