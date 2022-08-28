@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) throws Exception;
+    CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) throws Exception;
     CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException;
     List<String> getCategoryNames() throws EmptyListException;
     CategoryResponseDTO update (Long id, CategoryRequestDTO categoryRequestDTO);
-    void deleteCategory(Long id);
+    void delete(Long id);
 }

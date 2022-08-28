@@ -9,15 +9,10 @@ import com.alkemy.ong.service.CategoryService;
 import java.util.List;
 import javax.validation.Valid;
 
-import com.alkemy.ong.util.CategoryResponse;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import static com.alkemy.ong.util.Constants.*;
 
 @RestController
 @RequestMapping("/categories")
@@ -28,7 +23,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) throws Exception {
-        return ResponseEntity.ok().body(categoryService.createCategory(categoryRequestDTO));
+        return ResponseEntity.ok().body(categoryService.create(categoryRequestDTO));
     }
 
     @GetMapping("/get-all")
@@ -50,7 +45,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id){
-        categoryService.deleteCategory(id);
+        categoryService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

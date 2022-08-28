@@ -10,10 +10,9 @@ import java.util.List;
 
 public interface CommentService {
 
-    CommentResponseDTO save(CommentRequestDTO dto, HttpServletRequest request) throws Exception;
-    void deleteById(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException;
+    CommentResponseDTO create(CommentRequestDTO dto, HttpServletRequest request) throws Exception;
+    void delete(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException;
     CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException;
-    List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception;
-    List<CommentResponseDTO> getAllResponseDto();
+    List<CommentResponseDTO> getAll();
 
 }

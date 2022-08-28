@@ -33,7 +33,7 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
     private CategoryMapper categoryMapper;
 
     @Transactional
-    public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) throws Exception {
+    public CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) throws Exception {
         if (repository.existsByName(categoryRequestDTO.getName())) throw new AlreadyExistsException(
                 messageSource.getMessage("error.category.already.exists", null, Locale.US));
         Category categoryToSave = categoryMapper.RequestDTOToEntity(categoryRequestDTO);
@@ -68,7 +68,7 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         return categoryMapper.entityToResponseDTO(repository.save(category));
     }
 
-    public void deleteCategory(Long id) {
+    public void delete(Long id) {
         if(repository.existsById(id)) throw  new EntityNotFoundException(" Category with that id was not found.");
         repository.deleteById(id);
     }

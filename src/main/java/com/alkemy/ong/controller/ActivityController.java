@@ -21,7 +21,7 @@ public class ActivityController {
 
     @PostMapping
     public ResponseEntity<ActivityResponseDTO> create(@Valid @RequestBody ActivityRequestDTO activityRequestDTO) throws NameAlreadyExists {
-        ActivityResponseDTO activityCreated = activityService.save(activityRequestDTO);
+        ActivityResponseDTO activityCreated = activityService.create(activityRequestDTO);
         return ResponseEntity.ok().body(activityCreated);
     }
 

@@ -30,6 +30,25 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
     private ActivityMapper activityMapper;
 
     @Transactional
+    public ActivityResponseDTO create(ActivityRequestDTO activityRequestDTO) throws NameAlreadyExists {
+        if (repository.existsByName(activityRequestDTO.getName()))
+            throw new NameAlreadyExists(messageSource.getMessage("error.activity.already.exists", null, Locale.US));
+        Activity activity = activityMapper.requestDTOToEntity(activityRequestDTO);
+        Activity activitySaved = repository.save(activity);
+        return activityMapper.entityToResponseDTO(activitySaved);
+    }
+
+    public ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException {
+        if(pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
+        Page<Activity> page = getPage(pageNumber);
+        String previousUrl = urlGetPrevious(pageNumber);
+        String nextUrl = urlGetNext(page, pageNumber);
+
+        if (page.getTotalPages() < pageNumber) throw new NotFoundException("Page does not have elements.");
+        return activityMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
+    }
+
+    @Transactional
     public ActivityResponseDTO update(Long id, ActivityRequestDTO activityRequestDTO) {
         Activity activity = repository
                 .findById(id)
@@ -44,27 +63,9 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
     }
 
     @Transactional
-    public ActivityResponseDTO save(ActivityRequestDTO activityRequestDTO) throws NameAlreadyExists {
-        if (repository.existsByName(activityRequestDTO.getName()))
-            throw new NameAlreadyExists(messageSource.getMessage("error.activity.already.exists", null, Locale.US));
-        Activity activity = activityMapper.requestDTOToEntity(activityRequestDTO);
-        Activity activitySaved = repository.save(activity);
-        return activityMapper.entityToResponseDTO(activitySaved);
-    }
-
     public void delete(Long id) {
         if (repository.existsById(id)) repository.deleteById(id);
         else throw new EntityNotFoundException("Activity was not found.");
-    }
-
-    public ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException {
-        if(pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
-        Page<Activity> page = getPage(pageNumber);
-        String previousUrl = urlGetPrevious(pageNumber);
-        String nextUrl = urlGetNext(page, pageNumber);
-
-        if (page.getTotalPages() < pageNumber) throw new NotFoundException("Page does not have elements.");
-        return activityMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
 }

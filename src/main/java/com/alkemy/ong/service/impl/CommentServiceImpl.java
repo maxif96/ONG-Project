@@ -50,7 +50,7 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     private JwUtils jwUtil;
 
     @Transactional
-    public CommentResponseDTO save(CommentRequestDTO requestDTO, HttpServletRequest request){
+    public CommentResponseDTO create(CommentRequestDTO requestDTO, HttpServletRequest request){
             final String authorizationHeader = request.getHeader("Authorization");
 
             String email = jwUtil.extractUsername(authorizationHeader.substring(7));
@@ -63,17 +63,12 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
 
     }
 
-    @Transactional
-    public void deleteById(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException {
-
-        String authorizationHeader = request.getHeader("Authorization");
-
-        String emailLogged = jwUtil.extractUsername(authorizationHeader.substring(7));
-        Comment comment = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment was not found."));
-        String emailFromComment = comment.getUser().getEmail();
-        if (!emailLogged.equalsIgnoreCase(emailFromComment)) throw new UnauthorizedException("You don't have authorization to delete this comment");
-        repository.deleteById(id);
-
+    @Transactional(readOnly = true)
+    public List<CommentResponseDTO> getAll() {
+        return repository.findAllByOrderByCreateAtAsc()
+                .stream()
+                .map(comment -> commentMapper.entityToResponseDTO(comment))
+                .collect(Collectors.toList());
     }
 
     public CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException {
@@ -87,20 +82,16 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
         return commentMapper.entityToResponseDTO(repository.save(comment));
     }
 
-    public List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception {
-       return repository.findAllByNewsId(newsId)
-               .stream()
-                .map(p -> commentMapper.entityToResponseDTO(p))
-                .collect(Collectors.toList());
+    @Transactional
+    public void delete(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        String emailLogged = jwUtil.extractUsername(authorizationHeader.substring(7));
+        Comment comment = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment was not found."));
+        String emailFromComment = comment.getUser().getEmail();
+        if (!emailLogged.equalsIgnoreCase(emailFromComment)) throw new UnauthorizedException("You don't have authorization to delete this comment");
+        repository.deleteById(id);
     }
-    @Override
-    @Transactional(readOnly = true)
-    public List<CommentResponseDTO> getAllResponseDto() {
-        return repository.findAllByOrderByCreateAtAsc()
-                .stream()
-                .map(comment -> commentMapper.entityToResponseDTO(comment))
-                .collect(Collectors.toList());
 
 
-    }
 }

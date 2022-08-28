@@ -78,7 +78,7 @@ public class NewsController implements NewsDocumentation {
     public ResponseEntity<?> findCommentByNewsId(@PathVariable("newsId") Long newsId){
      List<CommentResponseDTO> commentsDto;
         try {
-            commentsDto = commentServiceImpl.findCommentByNewsId(newsId);
+            commentsDto = newsService.findCommentByNewsId(newsId);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), NOT_FOUND);
         }
