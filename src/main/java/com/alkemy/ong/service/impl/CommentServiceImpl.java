@@ -3,6 +3,8 @@ package com.alkemy.ong.service.impl;
 import com.alkemy.ong.auth.utils.JwUtils;
 import com.alkemy.ong.dto.CommentRequestDTO;
 
+import com.alkemy.ong.dto.response.CommentPageResponse;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.exception.UnauthorizedException;
 import com.alkemy.ong.model.Comment;
@@ -23,6 +25,7 @@ import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
@@ -40,10 +43,6 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     private UserRepository userRepository;
     @Autowired
     private CommentMapper commentMapper;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private NewsRepository newsRepository;
     @Autowired
     private MessageSource messageSource;
     @Autowired
@@ -64,11 +63,23 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     }
 
     @Transactional(readOnly = true)
-    public List<CommentResponseDTO> getAll() {
+    public List<CommentResponseDTO> getAll() throws EmptyListException {
+        if (repository.findAllByOrderByCreateAtAsc().isEmpty()) throw new EmptyListException("No one comment was found.");
+
         return repository.findAllByOrderByCreateAtAsc()
                 .stream()
                 .map(comment -> commentMapper.entityToResponseDTO(comment))
                 .collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public CommentPageResponse getCommentsPage (Integer pageNumber) throws NotFoundException {
+        Page<Comment> page = getPage(pageNumber);
+        String previousUrl = urlGetPrevious(pageNumber);
+        String nextUrl = urlGetNext(page, pageNumber);
+
+        if (page.getTotalPages() < pageNumber) throw new NotFoundException("Page doesn't have elements");
+
+        return commentMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
     public CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException {

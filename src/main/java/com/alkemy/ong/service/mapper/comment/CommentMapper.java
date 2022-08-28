@@ -1,6 +1,7 @@
 package com.alkemy.ong.service.mapper.comment;
 
 import com.alkemy.ong.dto.CommentRequestDTO;
+import com.alkemy.ong.dto.response.CommentPageResponse;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.model.Comment;
 import com.alkemy.ong.repository.NewsRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CommentMapper {
@@ -41,4 +44,14 @@ public class CommentMapper {
                 .build();
     }
 
+    public CommentPageResponse buildPageResponse(List<Comment> content, String previousUrl, String nextUrl) {
+        return CommentPageResponse.builder()
+                .comments(content
+                        .stream()
+                        .map(this::entityToResponseDTO)
+                        .collect(Collectors.toList()))
+                .previousUrl(previousUrl)
+                .nextUrl(nextUrl)
+                .build();
+    }
 }

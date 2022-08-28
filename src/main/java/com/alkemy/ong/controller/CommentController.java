@@ -1,7 +1,9 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.CommentRequestDTO;
+import com.alkemy.ong.dto.response.CommentPageResponse;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.exception.UnauthorizedException;
 import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.service.UserService;
@@ -54,14 +56,13 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(){
-        List<CommentResponseDTO> response = commentService.getAll();
-        if(response == null || response.isEmpty()){
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(messageSource.getMessage("error.commentList.empty", null, Locale.US));
-        }
-        return ResponseEntity.ok(commentService.getAll());
+    public ResponseEntity<List<CommentResponseDTO>> getAll() throws EmptyListException {
+        return ResponseEntity.ok().body(commentService.getAll());
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<CommentPageResponse> getCommentsPage (@RequestParam(defaultValue = "1") Integer pageNumber) throws NotFoundException {
+        return ResponseEntity.ok().body(commentService.getCommentsPage(pageNumber));
     }
 
 

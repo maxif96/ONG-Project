@@ -53,7 +53,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class,
+            NotFoundException.class,
+            IOException.class,
+            EmptyListException.class
+    })
     @ResponseBody
     public MessageResponse handleNotFound (Exception e, HttpServletRequest request){
         return new MessageResponse (LocalDateTime.now(), e, request);
@@ -67,24 +71,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public MessageResponse handleAlreadyExists (Exception e, HttpServletRequest request) {
         return new MessageResponse(LocalDateTime.now(), e, request);
     }
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseBody
-    public MessageResponse handleResourceNotFound (Exception e, HttpServletRequest request){
-        return new MessageResponse(LocalDateTime.now(), e, request);
-    }
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(IOException.class)
-    @ResponseBody
-    public MessageResponse mailNotFound (Exception e, HttpServletRequest request){
-        return new MessageResponse (LocalDateTime.now(), e, request);
-
-    }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     @ExceptionHandler(UnauthorizedException.class)
-    public MessageResponse unauthorized (Exception e, HttpServletRequest request){
+    public MessageResponse handleUnauthorized (Exception e, HttpServletRequest request){
         return new MessageResponse(LocalDateTime.now(), e, request);
     }
 
