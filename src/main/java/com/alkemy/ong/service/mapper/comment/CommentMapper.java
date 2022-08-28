@@ -22,13 +22,6 @@ public class CommentMapper {
     public CommentMapper() {
     }
 
-    public CommentRequestDTO commentToDto(Comment comment) {
-        CommentRequestDTO commentRequestDTO = new CommentRequestDTO();
-        commentRequestDTO.setBody(comment.getBody());
-        commentRequestDTO.setNewsId(comment.getNews().getId());
-        return commentRequestDTO;
-    }
-
     public CommentResponseDTO entityToResponseDTO (Comment comment){
         return CommentResponseDTO.builder()
                 .id(comment.getId())
@@ -38,7 +31,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public Comment entityToDTO(CommentRequestDTO requestDTO, Long userId) {
+    public Comment requestDTOToEntity(CommentRequestDTO requestDTO, Long userId) {
         return Comment.builder()
                 .body(requestDTO.getBody())
                 .user(usersRepository.findById(userId)
@@ -48,13 +41,4 @@ public class CommentMapper {
                 .build();
     }
 
-    public CommentResponseDTO commentToResponseDto(Comment comment) {
-        return CommentResponseDTO
-                .builder()
-                .id(comment.getId())
-                .body(comment.getBody())
-                .userId(comment.getUser().getId())
-                .newsId(comment.getNews().getId())
-                .build();
-    }
 }

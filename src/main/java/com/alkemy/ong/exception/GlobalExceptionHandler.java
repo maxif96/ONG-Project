@@ -52,18 +52,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(TypeMismatchException.class)
-    public HttpStatus handleTypeMismatchException(TypeMismatchException exception) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid value '${e.value}'", exception);
-    }
-
-    @ExceptionHandler(WebExchangeBindException.class)
-    public HttpStatus handleWebExchangeBindException(WebExchangeBindException exception) {
-        throw new WebExchangeBindException(Objects.requireNonNull(exception.getMethodParameter()), exception.getBindingResult()) {
-            String message = "${fieldError?.field} has invalid value '${fieldError?.rejectedValue}'";
-        };
-    }
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseBody
@@ -93,29 +81,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<MessageResponse> handlerNotFound(
-        ResourceNotFoundException resourceNotFoundException,
-        HttpServletRequest httpServletRequest
-    ){
-        return new ResponseEntity<>(new MessageResponse(
-            LocalDateTime.now(),
-            resourceNotFoundException,
-            httpServletRequest
-        ), HttpStatus.NOT_FOUND);
-    }
-
-
-    @ExceptionHandler(ForbiddenUpdate.class)
-    public ResponseEntity<MessageResponse> handleForbiddenUpdate(
-            ForbiddenUpdate forbiddenUpdate,
-            HttpServletRequest httpServletRequest
-    ){
-        return new ResponseEntity<>(new MessageResponse(
-                LocalDateTime.now(),
-                forbiddenUpdate,
-                httpServletRequest
-        ), HttpStatus.FORBIDDEN);
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    @ExceptionHandler(UnauthorizedException.class)
+    public MessageResponse unauthorized (Exception e, HttpServletRequest request){
+        return new MessageResponse(LocalDateTime.now(), e, request);
     }
 
 

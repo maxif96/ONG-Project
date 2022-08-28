@@ -35,7 +35,7 @@ public class Comment {
     @NotNull(message = "user_id can not be null")
     private Users user;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinTable(name = "news_id")
     @NotNull(message = "news_id can not be null")
     private News news;

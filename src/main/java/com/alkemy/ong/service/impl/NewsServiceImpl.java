@@ -37,8 +37,8 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
     @Override
     public NewsDto createNews(NewsDto newsDto) {
         News news = newsMapper.newsDTOtoEntity(newsDto);
-        News newNews = newsRepository.save(news);
-        return newsMapper.newsEntityToDTO(newNews);
+        News newSaved = newsRepository.save(news);
+        return newsMapper.newsEntityToDTO(newSaved);
     }
 
 

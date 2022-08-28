@@ -3,7 +3,8 @@ package com.alkemy.ong.controller;
 import com.alkemy.ong.dto.CommentRequestDTO;
 import com.alkemy.ong.exception.ApiError;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
-import com.alkemy.ong.service.ICommentService;
+import com.alkemy.ong.exception.UnauthorizedException;
+import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -28,7 +29,7 @@ import java.util.List;
 public class CommentController {
 
 
-    @Autowired private ICommentService commentService;
+    @Autowired private CommentService commentService;
     @Autowired
     private MessageSource messageSource;
     @Autowired
@@ -49,9 +50,9 @@ public class CommentController {
             @RequestBody CommentRequestDTO commentRequestDTO,
             @PathVariable("id") Long id,
             @RequestHeader(name = "Authorization") String token
-    ){
+    ) throws UnauthorizedException {
         return new ResponseEntity<>(commentService
-                .updateComment(commentRequestDTO, id, token), HttpStatus.OK);
+                .update(commentRequestDTO, id, token), HttpStatus.OK);
     }
 
 

@@ -33,7 +33,7 @@ public class NewsController implements NewsDocumentation {
 
     @PostMapping
     public ResponseEntity<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto){
-        return new ResponseEntity<NewsDto>(newsService.createNews(newsDto), CREATED);
+        return ResponseEntity.ok().body(newsService.createNews(newsDto));
     }
 
     @GetMapping("/get-all")

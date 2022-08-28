@@ -3,19 +3,17 @@ package com.alkemy.ong.service.impl;
 import com.alkemy.ong.auth.utils.JwUtils;
 import com.alkemy.ong.dto.CommentRequestDTO;
 
-import com.alkemy.ong.dto.response.UserResponseDTO;
-import com.alkemy.ong.exception.ForbiddenUpdate;
 import com.alkemy.ong.exception.ResourceNotFoundException;
+import com.alkemy.ong.exception.UnauthorizedException;
 import com.alkemy.ong.model.Comment;
 import com.alkemy.ong.model.Users;
 import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.UserRepository;
 
 import com.alkemy.ong.dto.response.CommentResponseDTO;
-import com.alkemy.ong.model.News;
 import com.alkemy.ong.repository.NewsRepository;
 
-import com.alkemy.ong.service.ICommentService;
+import com.alkemy.ong.service.CommentService;
 import com.alkemy.ong.service.UserService;
 import com.alkemy.ong.service.mapper.comment.CommentMapper;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRepository> implements ICommentService {
+public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRepository> implements CommentService {
 
     @Autowired
     private UserRepository userRepository;
@@ -51,69 +49,43 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     private JwUtils jwUtil;
 
     @Transactional
-    public CommentResponseDTO save(CommentRequestDTO dto, HttpServletRequest request) throws Exception {
+    public CommentResponseDTO save(CommentRequestDTO requestDTO, HttpServletRequest request){
             final String authorizationHeader = request.getHeader("Authorization");
 
             String email = jwUtil.extractUsername(authorizationHeader.substring(7));
             Users loggedUser = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UserNotFoundException("You may be logged to leave a comment."));
 
-            Comment commentToSave = commentMapper.entityToDTO(dto, loggedUser.getId());
+            Comment commentToSave = commentMapper.requestDTOToEntity(requestDTO, loggedUser.getId());
 
-            return commentMapper.commentToResponseDto(repository.save(commentToSave));
+            return commentMapper.entityToResponseDTO(repository.save(commentToSave));
 
     }
 
-    @Override
     @Transactional
     public void deleteById(Long id) throws NotFoundException {
-        try {
-            Optional<Comment> comment = repository.findById(id);
-            if (comment.isPresent()) {
-                repository.deleteById(id);
-            }
-        } catch (Exception e) {
-            throw new NotFoundException(messageSource.getMessage("error.comment.notFound", null, Locale.US));
-        }
+        if(repository.existsById(id)) repository.deleteById(id);
+        else throw new NotFoundException(messageSource.getMessage("error.comment.notFound", null, Locale.US));
     }
 
-    @Override
 
-    public CommentResponseDTO updateComment(CommentRequestDTO commentRequestDTO, Long id, String token) {
-//        Comment comment = repository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Comment","id",id));
-//
-//        UserResponseDTO userResponseDTO = userService.getUserDataByToken(token);
-//
-//        if( !(comment.getUser().getEmail().equals(userResponseDTO.getEmail())
-//                || userRepository.findByEmail(userResponseDTO.getEmail()).getRole()
-//                .getName().equals("ROLE_ADMIN")  ) )
-//        {
-//            throw new ForbiddenUpdate("comment","id",id);
-//        }
-//        comment.setBody(commentRequestDTO.getBody());
-//        return commentMapper.commentToResponseDto(repository.save(comment));
-        return null;
+    public CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException {
+        String emailFromRequest = jwUtil.extractUsername(token.substring(7));
+        Comment comment = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment","id",id));
+
+        if(!comment.getUser().getEmail().equalsIgnoreCase(emailFromRequest)) throw new UnauthorizedException("You are not authorized to update this comment.");
+
+        comment.setBody(commentRequestDTO.getBody());
+        return commentMapper.entityToResponseDTO(repository.save(comment));
     }
 
     public List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception {
-        List<CommentResponseDTO> commentsDto = new ArrayList<>();
-        Optional<News> response = newsRepository.findById(newsId);
-        if (!response.isPresent()) {
-            throw new EntityNotFoundException(messageSource.getMessage("news.notFound", null, Locale.US));
-        } else {
-            List<Comment> comments = repository.findCommentByNewsId(newsId);
-            if (comments.isEmpty()) {
-                throw new Exception(messageSource.getMessage("news.comment.empty", null, Locale.US));
-            } else {
-                for (Comment aux : comments) {
-                    CommentResponseDTO convertComment = commentMapper.entityToResponseDTO(aux);
-                    commentsDto.add(convertComment);
-                }
-
-            }
+        List<CommentResponseDTO> responseList = new ArrayList<>();
+        for (Comment comment : repository.findAllByNewsId(newsId)){
+            responseList.add(commentMapper.entityToResponseDTO(comment));
         }
-        return commentsDto;
+        return responseList;
     }
 
     @Override
@@ -132,7 +104,7 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     public List<CommentResponseDTO> getAllResponseDto() {
         return repository.findAllByOrderByCreateAtAsc()
                 .stream()
-                .map(comment -> commentMapper.commentToResponseDto(comment))
+                .map(comment -> commentMapper.entityToResponseDTO(comment))
                 .collect(Collectors.toList());
 
 
