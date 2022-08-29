@@ -48,15 +48,11 @@ public class ActivityMapper {
                 .build();
     }
 
-    private List<ActivityResponseDTO> entityListToResponseDTO(List<Activity> activities) {
-        return activities.stream()
-                .map(this::entityToResponseDTO)
-                .collect(Collectors.toList());
-    }
-
     public ActivityPageResponse buildPageResponse(List<Activity> activities, String previousUrl, String nextUrl) {
         return ActivityPageResponse.builder()
-                .activities(entityListToResponseDTO(activities))
+                .activities(activities.stream()
+                        .map(this::entityToResponseDTO)
+                        .collect(Collectors.toList()))
                 .nextUrl(nextUrl)
                 .previousUrl(previousUrl)
                 .build();

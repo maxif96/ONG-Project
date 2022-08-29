@@ -13,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class NewsMapper {
@@ -77,15 +78,11 @@ public class NewsMapper {
                 .build();
     }
 
-    public List<NewsResponseDTO> entityListToResponseList (List<News> newsList){
-        List<NewsResponseDTO> newsResponseDTOList = new ArrayList<>();
-        newsList.forEach(p -> newsResponseDTOList.add(entityToResponse(p)));
-        return  newsResponseDTOList;
-    }
-
     public NewsPageResponse buildPageResponse(List<News> members, String previous, String next){
         return NewsPageResponse.builder()
-                .news(entityListToResponseList(members))
+                .news(members.stream()
+                        .map(this::entityToResponse)
+                        .collect(Collectors.toList()))
                 .previous(previous)
                 .next(next)
                 .build();

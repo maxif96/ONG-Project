@@ -48,15 +48,11 @@ public class CategoryMapper {
                 .build();
     }
 
-    public List<CategoryResponseDTO> entityListToResponseDTO (List<Category> categories){
-        return categories.stream()
-                .map(this::entityToResponseDTO)
-                .collect(Collectors.toList());
-    }
-
     public CategoryPageResponse buildPageResponse (List<Category> categories, String previous, String next){
         return CategoryPageResponse.builder()
-                .categories(entityListToResponseDTO(categories))
+                .categories(categories.stream()
+                        .map(this::entityToResponseDTO)
+                        .collect(Collectors.toList()))
                 .previous(previous)
                 .next(next)
                 .build();
