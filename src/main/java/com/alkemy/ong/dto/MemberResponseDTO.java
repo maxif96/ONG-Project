@@ -9,20 +9,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDto {
+public class MemberResponseDTO {
 
     private Long id;
-    @NotNull(message = "name can´t be null")
     private String name;
-
     private String facebookUrl;
-
     private String instagramUrl;
-
     private String linkedinUrl;
-
-    @NotNull(message = "image can´t be null")
     private String image;
-
     private String description;
+
 }

@@ -1,6 +1,6 @@
 package com.alkemy.ong;
 
-import com.alkemy.ong.dto.ContactDto;
+import com.alkemy.ong.dto.response.ContactResponseDTO;
 import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.repository.ContactRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,7 +26,7 @@ public class ContactContextTest {
     protected ContactRepository contactRepository;
 
     protected String createRequest(String name, Integer phone, String email, String message) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(ContactDto.builder()
+        return objectMapper.writeValueAsString(ContactResponseDTO.builder()
                 .name(name)
                 .phone(phone)
                 .email(email)

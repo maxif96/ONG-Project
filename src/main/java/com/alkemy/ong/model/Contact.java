@@ -3,7 +3,6 @@ package com.alkemy.ong.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -29,7 +28,7 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contact")
-    private Long idContact;
+    private Long id;
 
     @Column(nullable = false, name = "name")
     @NotNull(message = "Name can not be empty.")

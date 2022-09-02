@@ -30,25 +30,23 @@ public class Member {
     @NotNull(message = "name can´t be null")
     private String name;
 
-    @Nullable
     private String facebookUrl;
 
-    @Nullable
     private String instagramUrl;
 
-    @Nullable
     private String linkedinUrl;
 
     @NotNull(message = "image can´t be null")
     private String image;
 
-    @Nullable
     private String description;
 
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     private boolean softDelete = false;

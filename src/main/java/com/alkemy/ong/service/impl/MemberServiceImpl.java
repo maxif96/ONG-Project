@@ -1,94 +1,74 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.MemberDto;
+import com.alkemy.ong.dto.MemberRequestDTO;
+import com.alkemy.ong.dto.MemberResponseDTO;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.model.Member;
 import com.alkemy.ong.repository.MemberRepository;
 import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.service.mapper.MemberMapper;
-import com.alkemy.ong.util.MemberResponse;
+import com.alkemy.ong.util.MemberPageResponse;
+import com.alkemy.ong.util.PaginationUtil;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberRepository> implements MemberService {
 
     @Autowired
     private MemberMapper memberMapper;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
     @Override
-    public MemberResponse getAllMemberWithPagination(int numPage, int sizePage, String orderBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(orderBy).ascending()
-                : Sort.by(orderBy).descending();
-        Pageable pageable = PageRequest.of(numPage, sizePage, sort);
+    public MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException {
+        Page<Member> page = getPage(pageNumber);
+        String previousUrl = urlGetPrevious(pageNumber);
+        String nextUrl = urlGetNext(page, pageNumber);
 
-        Page<Member> members = memberRepository.findAll(pageable);
-
-        List<Member> categoryList = members.getContent();
-        List<MemberDto> content = categoryList.stream().map(member -> memberMapper.memberToDto(member))
-                .collect(Collectors.toList());
-
-        MemberResponse memberResponse = new MemberResponse();
-        memberResponse.setContent(content);
-        memberResponse.setNumPage(members.getNumber());
-        memberResponse.setSizePage(members.getSize());
-        memberResponse.setTotalElements(members.getTotalElements());
-        memberResponse.setTotalPages(members.getTotalPages());
-        memberResponse.setFirstPage(members.isFirst());
-        memberResponse.setLastPage(members.isLast());
-        memberResponse.setNextPage(members.nextOrLastPageable());
-        memberResponse.setPreviousPage(members.previousOrFirstPageable());
-
-        return memberResponse;
+        if (pageNumber > page.getTotalPages()) throw new NotFoundException("Page doesn't have elements.");
+        return memberMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
 
     @Override
-    public MemberDto create(MemberDto memberDto) {
-        Member member = memberMapper.dtoToEntity(memberDto);
-        Member newMember = memberRepository.save(member);
-        return memberMapper.memberToDto(newMember);
+    public MemberResponseDTO create(MemberRequestDTO memberRequestDTO) {
+        Member member = memberMapper.requestDTOTOEntity(memberRequestDTO);
+        Member newMember = repository.save(member);
+        return memberMapper.entityToResponseDTO(newMember);
     }
 
     @Override
-    public List<MemberDto> getAll() {
-        return memberRepository.findAll().stream()
-                .map(m -> memberMapper.memberToDto(m))
+    public List<MemberResponseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(m -> memberMapper.entityToResponseDTO(m))
                 .collect(Collectors.toList());
     }
 
 
-    private MemberDto findMemberById(Long id) {
-        Optional<Member> member = memberRepository.findById(id);
+    private MemberResponseDTO findMemberById(Long id) {
+        Optional<Member> member = repository.findById(id);
         if(member.isEmpty())return null;
-        return memberMapper.memberToDto(member.get());
+        return memberMapper.entityToResponseDTO(member.get());
     }
 
     @Override
-    public MemberDto updateMember(MemberDto memberUpdate, Long id) {
-        MemberDto memberDto = findMemberById(id);
-        if(memberDto==null) return null;
-        memberUpdate.setId(id);
-        Member member = memberMapper.dtoToEntity(memberUpdate);
-        return memberMapper.memberToDto(memberRepository.save(member));
+    public MemberResponseDTO updateMember(MemberRequestDTO memberUpdate, Long id) {
+        MemberResponseDTO memberResponseDTO = findMemberById(id);
+        if(memberResponseDTO ==null) return null;
+//        memberUpdate.setId(id);
+        Member member = memberMapper.requestDTOTOEntity(memberUpdate);
+        return memberMapper.entityToResponseDTO(repository.save(member));
     }
 
 
     @Override
     public void removeMember(Long id) {
-        Member member = memberRepository.findById(id)
+        Member member = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Member", "id", id));
-        memberRepository.delete(member);
+        repository.delete(member);
     }
 }
 

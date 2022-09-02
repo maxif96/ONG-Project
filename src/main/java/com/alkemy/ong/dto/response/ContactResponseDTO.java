@@ -1,5 +1,5 @@
 
-package com.alkemy.ong.dto;
+package com.alkemy.ong.dto.response;
 
 import lombok.*;
 
@@ -11,19 +11,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ContactDto {
+public class ContactResponseDTO {
 
     private Long idContact;
-
-    @NotNull(message = "Name can not be empty.")
     private String name;
-
-    @NotNull(message = "Phone can not be empty.")
     private Integer phone;
-
-    @NotNull(message = "Email can not be empty.")
     private String email;
-
     private String message;
-    
+
 }
