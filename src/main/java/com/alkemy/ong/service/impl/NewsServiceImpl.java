@@ -61,7 +61,6 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
                         .save(news));
     }
 
-    @Override
     @Transactional
     public void deleteById(Long id){
         News news = repository.findById(id)
@@ -71,7 +70,7 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
             repository.deleteById(id);
         }
     }
-    @Override
+    @Transactional(readOnly = true)
     public NewsPageResponse pagination(Integer numberOfPage) throws NotFoundException {
         if (numberOfPage < 1) throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
 

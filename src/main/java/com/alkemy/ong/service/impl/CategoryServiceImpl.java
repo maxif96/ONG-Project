@@ -6,12 +6,14 @@ import com.alkemy.ong.dto.response.CategoryResponseDTO;
 import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.model.Category;
+import com.alkemy.ong.model.Member;
 import com.alkemy.ong.repository.CategoryRepository;
 import com.alkemy.ong.service.CategoryService;
 import com.alkemy.ong.service.mapper.CategoryMapper;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.alkemy.ong.util.MemberPageResponse;
 import com.alkemy.ong.util.PaginationUtil;
 import com.amazonaws.services.kms.model.AlreadyExistsException;
 import javassist.NotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +42,7 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         Category categoryToSave = categoryMapper.RequestDTOToEntity(categoryRequestDTO);
         return categoryMapper.entityToResponseDTO(repository.save(categoryToSave));
     }
-
+    @Transactional(readOnly = true)
     public CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException {
         if (numberOfPage < 1) throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
 
@@ -51,13 +54,12 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
             throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
         return categoryMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
-
+    @Transactional(readOnly = true)
     public List<String> getCategoryNames() throws EmptyListException {
         if (repository.findAllCategoryNames().isEmpty())
             throw new EmptyListException(messageSource.getMessage("error.categorylist.empty", null, Locale.US));
         return repository.findAllCategoryNames();
     }
-
     @Transactional
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequestDTO) {
         Category category = repository
@@ -67,7 +69,6 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         category = categoryMapper.updateCategory(category, categoryRequestDTO);
         return categoryMapper.entityToResponseDTO(repository.save(category));
     }
-
     public void delete(Long id) {
         if(repository.existsById(id)) throw  new EntityNotFoundException(" Category with that id was not found.");
         repository.deleteById(id);

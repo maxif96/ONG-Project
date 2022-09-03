@@ -15,6 +15,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -22,18 +23,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberRepository> implements MemberService {
-
     @Autowired
     private MemberMapper memberMapper;
 
-    public MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException {
-        Page<Member> page = getPage(pageNumber);
-        String previousUrl = urlGetPrevious(pageNumber);
-        String nextUrl = urlGetNext(page, pageNumber);
-
-        if (pageNumber > page.getTotalPages()) throw new NotFoundException("Page doesn't have elements.");
-        return memberMapper.buildPage(page.getContent(), previousUrl, nextUrl);
-    }
     public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
         Member member = memberMapper.requestDTOTOEntity(memberRequestDTO);
         try {
@@ -43,11 +35,21 @@ public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberReposi
             throw new BadRequestException("Could not save the member.");
         }
     }
+    @Transactional(readOnly = true)
     public List<MemberResponseDTO> getAll() throws EmptyListException {
         if (repository.count() < 1) throw new EmptyListException("No one member was found.");
         return repository.findAll().stream()
                 .map(m -> memberMapper.entityToResponseDTO(m))
                 .collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException {
+        Page<Member> page = getPage(pageNumber);
+        String previousUrl = urlGetPrevious(pageNumber);
+        String nextUrl = urlGetNext(page, pageNumber);
+
+        if (pageNumber > page.getTotalPages()) throw new NotFoundException("Page doesn't have elements.");
+        return memberMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
     public MemberResponseDTO updateMember(Long id, MemberRequestDTO memberToUpdateRequest) {
         Member memberFromDatabase = repository.findById(id)

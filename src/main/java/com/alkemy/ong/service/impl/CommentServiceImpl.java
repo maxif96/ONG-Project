@@ -61,7 +61,6 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
             return commentMapper.entityToResponseDTO(repository.save(commentToSave));
 
     }
-
     @Transactional(readOnly = true)
     public List<CommentResponseDTO> getAll() throws EmptyListException {
         if (repository.findAllByOrderByCreateAtAsc().isEmpty()) throw new EmptyListException("No one comment was found.");
@@ -81,7 +80,6 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
 
         return commentMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
-
     public CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException {
         String emailFromRequest = jwUtil.extractUsername(token.substring(7));
         Comment comment = repository.findById(id)
@@ -92,7 +90,6 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
         comment.setBody(commentRequestDTO.getBody());
         return commentMapper.entityToResponseDTO(repository.save(comment));
     }
-
     @Transactional
     public void delete(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException {
         String authorizationHeader = request.getHeader("Authorization");

@@ -37,7 +37,7 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
         Activity activitySaved = repository.save(activity);
         return activityMapper.entityToResponseDTO(activitySaved);
     }
-
+    @Transactional(readOnly = true)
     public ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException {
         if(pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
         Page<Activity> page = getPage(pageNumber);
