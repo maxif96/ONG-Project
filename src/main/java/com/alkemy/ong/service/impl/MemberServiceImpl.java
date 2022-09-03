@@ -1,7 +1,8 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.MemberRequestDTO;
-import com.alkemy.ong.dto.MemberResponseDTO;
+import com.alkemy.ong.dto.response.MemberResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.exception.ResourceNotFoundException;
 import com.alkemy.ong.model.Member;
 import com.alkemy.ong.repository.MemberRepository;
@@ -9,12 +10,14 @@ import com.alkemy.ong.service.MemberService;
 import com.alkemy.ong.service.mapper.MemberMapper;
 import com.alkemy.ong.util.MemberPageResponse;
 import com.alkemy.ong.util.PaginationUtil;
+import com.amazonaws.services.pinpoint.model.BadRequestException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +26,6 @@ public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberReposi
     @Autowired
     private MemberMapper memberMapper;
 
-    @Override
     public MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException {
         Page<Member> page = getPage(pageNumber);
         String previousUrl = urlGetPrevious(pageNumber);
@@ -32,43 +34,31 @@ public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberReposi
         if (pageNumber > page.getTotalPages()) throw new NotFoundException("Page doesn't have elements.");
         return memberMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
-
-    @Override
-    public MemberResponseDTO create(MemberRequestDTO memberRequestDTO) {
+    public MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO) {
         Member member = memberMapper.requestDTOTOEntity(memberRequestDTO);
-        Member newMember = repository.save(member);
-        return memberMapper.entityToResponseDTO(newMember);
+        try {
+            Member memberSaved = repository.save(member);
+            return memberMapper.entityToResponseDTO(memberSaved);
+        } catch (BadRequestException badRequestException){
+            throw new BadRequestException("Could not save the member.");
+        }
     }
-
-    @Override
-    public List<MemberResponseDTO> getAll() {
+    public List<MemberResponseDTO> getAll() throws EmptyListException {
+        if (repository.count() < 1) throw new EmptyListException("No one member was found.");
         return repository.findAll().stream()
                 .map(m -> memberMapper.entityToResponseDTO(m))
                 .collect(Collectors.toList());
     }
+    public MemberResponseDTO updateMember(Long id, MemberRequestDTO memberToUpdateRequest) {
+        Member memberFromDatabase = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Member with that id was not found."));
+        Member memberUpdate = memberMapper.updateMember(memberFromDatabase,memberToUpdateRequest);
 
-
-    private MemberResponseDTO findMemberById(Long id) {
-        Optional<Member> member = repository.findById(id);
-        if(member.isEmpty())return null;
-        return memberMapper.entityToResponseDTO(member.get());
+        return memberMapper.entityToResponseDTO(repository.save(memberUpdate));
     }
-
-    @Override
-    public MemberResponseDTO updateMember(MemberRequestDTO memberUpdate, Long id) {
-        MemberResponseDTO memberResponseDTO = findMemberById(id);
-        if(memberResponseDTO ==null) return null;
-//        memberUpdate.setId(id);
-        Member member = memberMapper.requestDTOTOEntity(memberUpdate);
-        return memberMapper.entityToResponseDTO(repository.save(member));
-    }
-
-
-    @Override
-    public void removeMember(Long id) {
-        Member member = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Member", "id", id));
-        repository.delete(member);
+    public void deleteMember (Long id) {
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Member with that id not found.");
+        repository.deleteById(id);
     }
 }
 

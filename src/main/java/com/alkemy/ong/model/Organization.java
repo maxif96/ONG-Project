@@ -13,8 +13,8 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE id_organization =?")
-@Where(clause = "soft_delete = false")
+@SQLDelete(sql = "UPDATE organizations SET deleted = true WHERE id_organization =?")
+@Where(clause = "deleted = false")
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -70,6 +70,6 @@ public class Organization {
     @UpdateTimestamp
     private Date updateTimestamp;
 
-    @Column(name = "soft_delete")
-    private boolean isSoftDelete;
+    @Column
+    private boolean deleted;
 }

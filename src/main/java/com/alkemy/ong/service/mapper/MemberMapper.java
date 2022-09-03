@@ -1,11 +1,12 @@
 package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.MemberRequestDTO;
-import com.alkemy.ong.dto.MemberResponseDTO;
+import com.alkemy.ong.dto.response.MemberResponseDTO;
 import com.alkemy.ong.model.Member;
 import com.alkemy.ong.util.MemberPageResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class MemberMapper {
                 .linkedinUrl(member.getLinkedinUrl())
                 .description(member.getDescription())
                 .image(member.getImage())
+                .updateDate(member.getUpdatedAt())
                 .build();
     }
 
@@ -31,6 +33,7 @@ public class MemberMapper {
                 .instagramUrl(memberRequestDTO.getInstagramUrl())
                 .linkedinUrl(memberRequestDTO.getLinkedinUrl())
                 .description(memberRequestDTO.getDescription())
+                .createdAt(new Date())
                 .image(memberRequestDTO.getImage())
                 .build();
     }
@@ -42,6 +45,20 @@ public class MemberMapper {
                         .collect(Collectors.toList()))
                 .previousUrl(previousUrl)
                 .nextUrl(nextUrl)
+                .build();
+    }
+
+    public Member updateMember(Member memberFromDatabase, MemberRequestDTO memberToUpdateRequest) {
+        return Member.builder()
+                .id(memberFromDatabase.getId())
+                .name(memberToUpdateRequest.getName())
+                .description(memberToUpdateRequest.getDescription())
+                .facebookUrl(memberToUpdateRequest.getFacebookUrl())
+                .instagramUrl(memberToUpdateRequest.getInstagramUrl())
+                .linkedinUrl(memberToUpdateRequest.getLinkedinUrl())
+                .image(memberToUpdateRequest.getImage())
+                .createdAt(memberFromDatabase.getCreatedAt())
+                .updatedAt(new Date())
                 .build();
     }
 }

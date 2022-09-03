@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import com.amazonaws.services.kms.model.AlreadyExistsException;
+import com.amazonaws.services.pinpoint.model.BadRequestException;
 import com.amazonaws.services.workdocs.model.EntityAlreadyExistsException;
 import javassist.NotFoundException;
 import org.hibernate.TypeMismatchException;
@@ -69,6 +70,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             EmailAlreadyExists.class})
     @ResponseBody
     public MessageResponse handleAlreadyExists (Exception e, HttpServletRequest request) {
+        return new MessageResponse(LocalDateTime.now(), e, request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseBody
+    public MessageResponse handleBadRequest (Exception e, HttpServletRequest request){
         return new MessageResponse(LocalDateTime.now(), e, request);
     }
 

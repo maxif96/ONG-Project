@@ -1,8 +1,7 @@
 package com.alkemy.ong.util;
 
-import com.alkemy.ong.dto.MemberResponseDTO;
+import com.alkemy.ong.dto.response.MemberResponseDTO;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

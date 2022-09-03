@@ -14,8 +14,8 @@ import java.util.Date;
 
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE members SET softDelete = true WHERE id=?")
-@Where(clause = "soft_delete=false")
+@SQLDelete(sql = "UPDATE members SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Entity
 @Table(name = "members")
 @Builder
@@ -49,6 +49,6 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    private boolean softDelete = false;
+    private boolean deleted;
 
 }

@@ -34,11 +34,11 @@ public class CategoryMapper {
                 .name(category.getName())
                 .image(category.getImage())
                 .description(category.getDescription())
+                .updateDate(new Date())
                 .build();
     }
 
     public Category updateCategory (Category category, CategoryRequestDTO newsFields){
-
         return Category.builder()
                 .id(category.getId())
                 .name(newsFields.getName())

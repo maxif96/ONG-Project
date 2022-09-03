@@ -59,8 +59,8 @@ public class Users {
     @UpdateTimestamp
     private Date updatedOnTimestamp;
 
-    @Column(name = "deleted")
-    private boolean deleted = Boolean.FALSE;
+    @Column
+    private boolean deleted;
 
     public Users(String firstName, String lastName, String email, String password, String photo, Role role) {
         this.firstName = firstName;

@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 public class ActivityRequestDTO {
 
     @NotNull(message = "{error.name.notnull}")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]*", message = "{error.regex}")
+    @Pattern(regexp = "[a-zA-Z\\d\\s]*", message = "{error.regex}")
     public String name;
     @NotNull(message = "{error.content.notnull}")
     public String content;

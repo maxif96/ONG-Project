@@ -43,5 +43,5 @@ public class Testimonial {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedOnTimestamp;
 
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 }

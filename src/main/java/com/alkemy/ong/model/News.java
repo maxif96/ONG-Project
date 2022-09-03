@@ -52,7 +52,7 @@ public class News {
     private Date updateDate;
 
     @Column
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 
     public News(String name, String content, String image, Category category, Date date) {
         this.name = name;

@@ -1,8 +1,9 @@
-package com.alkemy.ong.dto;
+package com.alkemy.ong.dto.response;
 
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,5 +19,6 @@ public class MemberResponseDTO {
     private String linkedinUrl;
     private String image;
     private String description;
+    private Date updateDate;
 
 }
