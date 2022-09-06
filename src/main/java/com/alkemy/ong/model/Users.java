@@ -8,7 +8,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,13 +53,16 @@ public class Users {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @Column(nullable = false, updatable = false,name = "created_on")
-    @CreationTimestamp
-    private Date createdOnTimestamp;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
-    @Column(name = "updated_on")
+    @Column(nullable = false, updatable = false,name = "created_date")
+    @CreationTimestamp
+    private LocalDateTime createdOnTimestamp;
+
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    private Date updatedOnTimestamp;
+    private LocalDateTime updatedOnTimestamp;
 
     @Column
     private boolean deleted;

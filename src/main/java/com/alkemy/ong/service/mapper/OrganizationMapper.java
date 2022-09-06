@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.response.OrganizationResponseDTO;
 import com.alkemy.ong.model.Organization;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -14,7 +15,7 @@ public class OrganizationMapper {
     public OrganizationDto OrganizationEntityToDTO (Organization organization){
         return OrganizationDto
                 .builder()
-                .id(organization.getIdOrganization())
+                .id(organization.getId())
                 .name(organization.getEmail())
                 .image(organization.getImage())
                 .address(organization.getAddress())
@@ -67,13 +68,13 @@ public class OrganizationMapper {
                 .urlFacebook(organizationDTO.getUrlFacebook())
                 .urlInstagram(organizationDTO.getUrlInstagram())
                 .urlLinkedin(organizationDTO.getUrlLinkedin())
-                .updateTimestamp(new Date())
+                .updateTimestamp(LocalDateTime.now())
                 .build();
     }
 
     public Organization organizationUpdate (OrganizationUpdateDTO organizationDTO, Organization entity){
         return Organization.builder()
-                .idOrganization(entity.getIdOrganization())
+                .id(entity.getId())
                 .name(organizationDTO.getName())
                 .address(organizationDTO.getAddress())
                 .phone(organizationDTO.getPhone())
@@ -85,7 +86,7 @@ public class OrganizationMapper {
                 .urlInstagram(organizationDTO.getUrlInstagram())
                 .urlLinkedin(organizationDTO.getUrlLinkedin())
                 .creationTimestamp(entity.getCreationTimestamp())
-                .updateTimestamp(new Date())
+                .updateTimestamp(LocalDateTime.now())
                 .build();
 
     }

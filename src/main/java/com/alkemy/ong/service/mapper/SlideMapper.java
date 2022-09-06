@@ -26,7 +26,7 @@ public class SlideMapper {
                 .text(slideEntity.getText())
                 .imageUrl(slideEntity.getImageUrl())
                 .position(slideEntity.getPosition())
-                .organizationId(slideEntity.getOrganization().getIdOrganization())
+                .organizationId(slideEntity.getOrganization().getId())
                 .build();
     }
 

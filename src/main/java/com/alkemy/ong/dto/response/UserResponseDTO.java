@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -16,7 +17,7 @@ public class UserResponseDTO {
     private String lastName;
     private String email;
     private String photo;
-    private Date createdOn;
-    private Date updateOn;
+    private LocalDateTime createdOn;
+    private LocalDateTime updateOn;
 
 }

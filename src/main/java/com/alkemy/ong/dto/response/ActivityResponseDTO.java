@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -16,6 +17,6 @@ public class ActivityResponseDTO {
     public String name;
     public String image;
     public String content;
-    public Date updateDate;
+    public LocalDateTime updateDate;
 
 }

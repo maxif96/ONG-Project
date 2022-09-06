@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -25,28 +26,29 @@ public class Comment {
     private Long id;
 
     @NotBlank(message = "Comment can not be empty")
-    @NotNull(message = "Comment can not be null")
     @Column(nullable = false)
     private String body;
 
-
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_id")
-    @NotNull(message = "user_id can not be null")
+    @JoinTable(name = "comments_users",
+            joinColumns = {@JoinColumn(name = "comment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    @NotNull(message = "User can not be null")
     private Users user;
 
-    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
-    @JoinTable(name = "news_id")
-    @NotNull(message = "news_id can not be null")
+    @ManyToOne
+    @JoinTable(name = "comments_news",
+            joinColumns = {@JoinColumn(name = "comment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "news_id")})
+    @NotNull(message = "News can not be null")
     private News news;
 
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private Date createAt;
+    private LocalDateTime createAt;
 
-    @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    private Date updateAt;
+    private LocalDateTime updateAt;
+
 }

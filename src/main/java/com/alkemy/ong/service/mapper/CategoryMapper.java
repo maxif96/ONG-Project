@@ -7,6 +7,7 @@ import com.alkemy.ong.dto.response.CategoryResponseDTO;
 import com.alkemy.ong.model.Category;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class CategoryMapper {
                 .name(categoryRequestDTO.getName())
                 .image(categoryRequestDTO.getImage())
                 .description(categoryRequestDTO.getDescription())
-                .createDate(new Date())
+                .createDate(LocalDateTime.now())
                 .build();
     }
 
@@ -44,7 +45,7 @@ public class CategoryMapper {
                 .name(newsFields.getName())
                 .image(newsFields.getImage())
                 .description(newsFields.getDescription())
-                .updateDate(new Date())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 

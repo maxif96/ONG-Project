@@ -32,7 +32,7 @@ public class NewsMapper {
                 .content(news.getContent())
                 .name(news.getName())
                 .image(news.getImage())
-                .categoryId(news.getCategoryId().getId())
+                .categoryId(news.getCategory().getId())
                 .createDate(news.getCreateDate())
                 .updateDate(news.getUpdateDate())
                 .build();
@@ -44,7 +44,7 @@ public class NewsMapper {
                 .content(newsDto.getContent())
                 .name(newsDto.getName())
                 .image(newsDto.getImage())
-                .categoryId(categoryRepository
+                .category(categoryRepository
                         .findById(newsDto.getCategoryId())
                         .orElseThrow(() -> new EntityNotFoundException("Category doesn't found")))
                 .createDate(newsDto.getCreateDate())
@@ -59,7 +59,7 @@ public class NewsMapper {
                 .content(newsDto.getContent())
                 .name(newsDto.getName())
                 .image(newsDto.getImage())
-                .categoryId(categoryRepository
+                .category(categoryRepository
                         .findById(newsDto.getCategoryId())
                         .orElseThrow(() -> new EntityNotFoundException("Category doesn't found.")))
                 .createDate(newsDto.getCreateDate())
@@ -73,7 +73,7 @@ public class NewsMapper {
                 .name(newEntity.getName())
                 .image(newEntity.getImage())
                 .content(newEntity.getContent())
-                .categoryId(newEntity.getCategoryId().getId())
+                .categoryId(newEntity.getCategory().getId())
                 .createDate(newEntity.getCreateDate())
                 .build();
     }

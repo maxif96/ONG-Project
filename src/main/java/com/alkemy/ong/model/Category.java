@@ -1,5 +1,6 @@
 package com.alkemy.ong.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,31 +35,30 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name may not be null")
+    @Column(nullable = false)
+    @NotNull(message = "Name can not be null")
     private String name;
 
     @Column(nullable = false)
-    @NotNull(message = "Name may not be null")
+    @NotNull(message = "Description can not be null")
     private String description;
 
     @Column(nullable = false)
-    @NotNull(message = "Name may not be null")
+    @NotNull(message = "Image can not be null")
     private String image;
 
-    @Column(name = "creation_date")
+    @Column(name = "created_date")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    private LocalDateTime createDate;
     
-    @Column(name = "update_date")
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @Column
     private boolean deleted;
 
-    public Category(String name, String description, String image, Date createDate) {
+    public Category(String name, String description, String image, LocalDateTime createDate) {
         this.name = name;
         this.description = description;
         this.image = image;

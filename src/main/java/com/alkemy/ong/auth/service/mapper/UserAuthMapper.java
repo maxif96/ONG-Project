@@ -4,6 +4,7 @@ import com.alkemy.ong.auth.dto.request.UserDTO;
 import com.alkemy.ong.model.Users;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -25,7 +26,7 @@ public class UserAuthMapper {
                 .firstName(userDTO.getName())
                 .lastName(userDTO.getLastName())
                 .photo(userDTO.getPhoto())
-                .createdOnTimestamp(new Date())
+                .createdOnTimestamp(LocalDateTime.now())
                 .build();
     }
 

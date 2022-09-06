@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -30,12 +31,10 @@ public class Role {
     private String description;
 
     @Column(name = "created_date", updatable=false)
-    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private Date createAt;
+    private LocalDateTime createAt;
 
-    @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    private Date updateAt;
+    private LocalDateTime updateAt;
 }

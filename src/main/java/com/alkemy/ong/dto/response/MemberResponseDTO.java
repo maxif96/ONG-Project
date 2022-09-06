@@ -3,6 +3,7 @@ package com.alkemy.ong.dto.response;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -19,6 +20,6 @@ public class MemberResponseDTO {
     private String linkedinUrl;
     private String image;
     private String description;
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
 }

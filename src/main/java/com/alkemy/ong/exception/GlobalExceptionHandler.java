@@ -67,7 +67,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({NameAlreadyExists.class,
             BadCredentialsException.class,
-            EmailAlreadyExists.class})
+            EmailAlreadyExists.class,
+            AlreadyExistsException.class})
     @ResponseBody
     public MessageResponse handleAlreadyExists (Exception e, HttpServletRequest request) {
         return new MessageResponse(LocalDateTime.now(), e, request);

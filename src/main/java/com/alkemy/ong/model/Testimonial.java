@@ -4,12 +4,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,22 +29,20 @@ public class Testimonial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name is required.")
-    @NotEmpty(message = "Name is required.")
+    @NotBlank(message = "Name is required.")
     private String name;
 
     private String image;
+
     private String content;
 
-    @Column(nullable = false, updatable = false,name = "created_on")
+    @Column(nullable = false, updatable = false,name = "created_date")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOnTimestamp;
+    private LocalDateTime createdOn;
 
-    @Column(name = "updated_on")
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedOnTimestamp;
+    private LocalDateTime updatedOn;
 
     private boolean deleted;
 }

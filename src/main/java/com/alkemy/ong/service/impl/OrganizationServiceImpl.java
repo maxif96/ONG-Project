@@ -2,7 +2,6 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.OrganizationDto;
 import com.alkemy.ong.dto.OrganizationUpdateDTO;
-import com.alkemy.ong.dto.SlidesDto;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
 import com.alkemy.ong.dto.response.SlideResponseDTO;
 import com.alkemy.ong.model.Organization;
@@ -31,14 +30,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public OrganizationDto getOrganizationPublic() {
-        Optional<Organization> organization = organizationRepository.findFirstByOrderByIdOrganization();
+        Optional<Organization> organization = organizationRepository.findFirstByOrderById();
         return organization.map(value -> organizationMapper.OrganizationEntityToDTO(value)).orElse(null);
     }
 
     @Transactional
     public OrganizationUpdateDTO updateOrganization(OrganizationUpdateDTO organizationUpdateDTO) {
         /* Validate if exists in DB */
-        Optional<Organization> organizationEntity = organizationRepository.findFirstByOrderByIdOrganization();
+        Optional<Organization> organizationEntity = organizationRepository.findFirstByOrderById();
         if (organizationEntity.isEmpty()) throw new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US));
         /* Update */
         Organization organizationUpdated = organizationMapper.organizationUpdate(organizationUpdateDTO, organizationEntity.get());

@@ -5,9 +5,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -36,15 +37,13 @@ public class Activity {
     @NotNull(message = "{error.image.notnull}")
     private String image;
 
-    @Column(name = "created_date", updatable=false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date", updatable = false)
     @CreationTimestamp
-    private Date createAt;
+    private LocalDateTime createAt;
 
-    @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_date")
     @UpdateTimestamp
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
     @Column(name = "deleted")
     private boolean deleted;

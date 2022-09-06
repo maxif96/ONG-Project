@@ -14,6 +14,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -49,7 +50,7 @@ public class SeederData {
                     Role.builder()
                             .name(roles[i])
                             .description("")
-                            .createAt(new Date())
+                            .createAt(LocalDateTime.now())
                             .build());
         }
     }
@@ -135,9 +136,9 @@ public class SeederData {
         newsRepository.saveAll(news);
     }
     public void createCategory (){
-        Category donations = new Category("Donations", "Donations", "cloud.ko/help.jpg", new Date());
-        Category today = new Category("Today", "Daily news", "cloud.ko/today.jpg", new Date());
-        Category members = new Category("Us", "How we work", "cloud.ko/work.jpg", new Date());
+        Category donations = new Category("Donations", "Donations", "cloud.ko/help.jpg", LocalDateTime.now());
+        Category today = new Category("Today", "Daily news", "cloud.ko/today.jpg", LocalDateTime.now());
+        Category members = new Category("Us", "How we work", "cloud.ko/work.jpg", LocalDateTime.now());
 
         categoryRepository.saveAll(List.of(donations, today, members));
     }

@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -27,7 +28,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "name can´t be null")
+    @NotNull(message = "Name can not be null")
     private String name;
 
     private String facebookUrl;
@@ -36,18 +37,18 @@ public class Member {
 
     private String linkedinUrl;
 
-    @NotNull(message = "image can´t be null")
+    @NotNull(message = "Image can not be null")
     private String image;
 
     private String description;
 
+    @Column(name = "created_date")
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     private boolean deleted;
 

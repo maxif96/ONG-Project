@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class CommentMapper {
                 .body(comment.getBody())
                 .newsId(comment.getNews().getId())
                 .userId(comment.getUser().getId())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
@@ -41,6 +43,7 @@ public class CommentMapper {
                         .orElseThrow(() -> new UserNotFoundException("User with that id not found")))
                 .news(newsRepository.findById(requestDTO.getNewsId())
                         .orElseThrow(() -> new EntityNotFoundException("New with that id not found.")))
+                .createAt(LocalDateTime.now())
                 .build();
     }
 

@@ -1,6 +1,9 @@
 package com.alkemy.ong.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -22,9 +25,10 @@ public class Slide {
     @Column(nullable = false)
     private Integer position;
     @ManyToOne
-    @JoinColumn(name = "organization_id")
+    @JoinTable(name = "slide_organization",
+            joinColumns = {@JoinColumn(name = "slide_id")},
+            inverseJoinColumns = {@JoinColumn(name = "organization_id")})
     private Organization organization;
-
 
 
 }

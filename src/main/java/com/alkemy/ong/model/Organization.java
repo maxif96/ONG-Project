@@ -8,7 +8,9 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,30 +26,26 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_organization")
-    private Long idOrganization;
+    private Long id;
 
-    @Column(nullable = false, name = "name")
+    @Column(nullable = false)
     @NotNull(message = "Name can not be empty.")
     private String name;
 
-    @Column(name = "image")
     @NotNull(message = "Image can not be empty.")
     private String image;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "phone")
     private Integer phone;
 
-    @Column(nullable = false, name = "email")
+    @Column(nullable = false)
     @NotNull(message = "Email can not be empty.")
     @Email
     private String email;
 
     @Column(nullable = false, name = "welcome_text", columnDefinition = "TEXT")
-    @NotNull(message = "WelcomeText can not be empty.")
+    @NotNull(message = "Welcome Text can not be empty.")
     private String welcomeText;
 
     @Column(name = "about_us_text", columnDefinition = "TEXT")
@@ -62,14 +60,16 @@ public class Organization {
     @Column(name = "url_instagram")
     private String urlInstagram;
 
-    @Column(nullable = false, updatable = false, name = "creation_timestamp")
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private List<Slide> slides;
+
+    @Column(nullable = false, updatable = false, name = "created_date")
     @CreationTimestamp
-    private Date creationTimestamp;
+    private LocalDateTime creationTimestamp;
 
-    @Column(nullable = false, updatable = false, name = "update_timestamp")
+    @Column(nullable = false, updatable = false, name = "updated_date")
     @UpdateTimestamp
-    private Date updateTimestamp;
+    private LocalDateTime updateTimestamp;
 
-    @Column
     private boolean deleted;
 }

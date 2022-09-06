@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.response.ActivityResponseDTO;
 import com.alkemy.ong.model.Activity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class ActivityMapper {
                 .image(request.getImage())
                 .content(request.getContent())
                 .createAt(entityFromDB.getCreateAt())
-                .updateAt(new Date())
+                .updateAt(LocalDateTime.now())
                 .build();
     }
 
@@ -44,7 +45,7 @@ public class ActivityMapper {
                 .name(activityRequestDTO.name)
                 .content(activityRequestDTO.content)
                 .image(activityRequestDTO.image)
-                .createAt(new Date())
+                .createAt(LocalDateTime.now())
                 .build();
     }
 
