@@ -1,8 +1,10 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.NewsDto;
+import com.alkemy.ong.dto.NewsRequestDTO;
 import com.alkemy.ong.dto.response.CommentResponseDTO;
 import com.alkemy.ong.dto.response.NewsPageResponse;
+import com.alkemy.ong.dto.response.NewsResponseDTO;
+import com.alkemy.ong.exception.NameAlreadyExists;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.impl.CommentServiceImpl;
 import com.alkemy.ong.util.documentation.NewsDocumentation;
@@ -32,57 +34,35 @@ public class NewsController implements NewsDocumentation {
 
 
     @PostMapping
-    public ResponseEntity<NewsDto> createNews(@Valid @RequestBody NewsDto newsDto){
-        return ResponseEntity.ok().body(newsService.createNews(newsDto));
+    public ResponseEntity<NewsResponseDTO> create(@Valid @RequestBody NewsRequestDTO newsRequestDTO){
+        NewsResponseDTO newsCreated = newsService.createNews(newsRequestDTO);
+        return ResponseEntity.status(CREATED).body(newsCreated);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<NewsPageResponse> getNewsPaginated (@RequestParam(defaultValue = "1") Integer page) throws NotFoundException {
+    public ResponseEntity<NewsPageResponse> getNewsPage (@RequestParam(defaultValue = "1") Integer page) throws NotFoundException {
         return ResponseEntity.ok().body(newsService.pagination(page));
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<?> detailsNew(@Valid @PathVariable(value = "id") Long id) {
-        try {
-            NewsDto newsDto = newsService.findNewsById(id);
-            return ResponseEntity
-                    .ok()
-                    .body(newsDto);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(exception.getMessage(), NOT_FOUND);
-        }
+    public ResponseEntity<NewsResponseDTO> details(@Valid @PathVariable(value = "id") Long id) throws NameAlreadyExists {
+            return ResponseEntity.ok().body(newsService.findNewsById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NewsDto> updateNews (@Valid @PathVariable(value = "id") Long id, @RequestBody NewsDto newsUpdate ) {
-        try {
-            NewsDto newsDto = newsService.findNewsById(id);
-        } catch (Exception exception) {
-            return ResponseEntity.status(NOT_FOUND).build();
-        }
-        NewsDto newsDtoResponse = newsService.updateNews(newsUpdate, id);
-        return ResponseEntity.status(OK).body(newsDtoResponse);
+    public ResponseEntity<NewsResponseDTO> update(@Valid @PathVariable(value = "id") Long id, @RequestBody NewsRequestDTO newsRequestDTO) {
+        return ResponseEntity.ok().body(newsService.updateNews(newsRequestDTO, id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNews(@PathVariable(name = "id") Long id) {
-        try {
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
             newsService.deleteById(id);
-        } catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), NOT_FOUND);
-        }
-        return new ResponseEntity<>(messageSource.getMessage("news.deleted.message", null, Locale.US), OK);
+            return ResponseEntity.ok().body("News successfully deleted.");
     }
 
     @GetMapping("/{newsId}/comments")
-    public ResponseEntity<?> findCommentByNewsId(@PathVariable("newsId") Long newsId){
-     List<CommentResponseDTO> commentsDto;
-        try {
-            commentsDto = newsService.findCommentByNewsId(newsId);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), NOT_FOUND);
-        }
-     return ResponseEntity.status(OK).body(commentsDto);
+    public ResponseEntity<List<CommentResponseDTO>> findCommentsByNewsId(@PathVariable("newsId") Long newsId) throws Exception {
+        return ResponseEntity.ok().body(newsService.findCommentByNewsId(newsId));
     }
 
 }

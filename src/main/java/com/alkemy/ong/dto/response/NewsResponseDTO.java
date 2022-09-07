@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Getter @Setter
 @Builder
@@ -14,6 +15,7 @@ public class NewsResponseDTO {
     private String content;
     private String image;
     private Long categoryId;
-    private Date createDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
 }

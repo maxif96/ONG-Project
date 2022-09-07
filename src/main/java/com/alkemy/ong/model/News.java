@@ -8,6 +8,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -44,16 +45,16 @@ public class News {
     private List<Comment> comments;
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
-    private Date createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "updated_date")
     @UpdateTimestamp
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @Column
     private boolean deleted;
 
-    public News(String name, String content, String image, Category category, Date date) {
+    public News(String name, String content, String image, Category category, LocalDateTime date) {
         this.name = name;
         this.content = content;
         this.image = image;

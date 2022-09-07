@@ -7,10 +7,13 @@ import com.alkemy.ong.exception.NameAlreadyExists;
 import com.alkemy.ong.service.ActivityService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("activities")
@@ -22,7 +25,7 @@ public class ActivityController {
     @PostMapping
     public ResponseEntity<ActivityResponseDTO> create(@Valid @RequestBody ActivityRequestDTO activityRequestDTO) throws NameAlreadyExists {
         ActivityResponseDTO activityCreated = activityService.create(activityRequestDTO);
-        return ResponseEntity.ok().body(activityCreated);
+        return ResponseEntity.status(CREATED).body(activityCreated);
     }
 
     @GetMapping("/get-all")
@@ -39,9 +42,9 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete (@PathVariable Long id){
+    public ResponseEntity<String> delete (@PathVariable Long id){
         activityService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Activity successfully deleted");
     }
 
 }

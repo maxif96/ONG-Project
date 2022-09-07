@@ -131,7 +131,7 @@ public class SeederData {
         for (int i = 0; i < timesToCreate; i++){
             int categoryNumber = random.nextInt(3);
             int randomNumber = random.nextInt(newsName.size());
-            news.add(new News(newsName.get(randomNumber), newsContent.get(randomNumber), newsImage.get(randomNumber), categories.get(categoryNumber), new Date()));
+            news.add(new News(newsName.get(randomNumber), newsContent.get(randomNumber), newsImage.get(randomNumber), categories.get(categoryNumber), LocalDateTime.now()));
         }
         newsRepository.saveAll(news);
     }

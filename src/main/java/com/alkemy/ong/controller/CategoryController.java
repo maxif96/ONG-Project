@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -22,8 +24,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) throws Exception {
-        return ResponseEntity.ok().body(categoryService.create(categoryRequestDTO));
+    public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) throws Exception {
+        return ResponseEntity.status(CREATED).body(categoryService.create(categoryRequestDTO));
     }
 
     @GetMapping("/get-all")
@@ -44,8 +46,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+    public ResponseEntity<String> delete(@PathVariable("id") Long id){
         categoryService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Category successfully deleted");
     }
 }

@@ -1,6 +1,6 @@
 package com.alkemy.ong.service.mapper;
 
-import com.alkemy.ong.dto.NewsDto;
+import com.alkemy.ong.dto.NewsRequestDTO;
 import com.alkemy.ong.dto.response.NewsPageResponse;
 import com.alkemy.ong.dto.response.NewsResponseDTO;
 import com.alkemy.ong.model.News;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +25,8 @@ public class NewsMapper {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public NewsDto newsEntityToDTO (News news) {
-        return NewsDto
+    public NewsResponseDTO entityToDTO(News news) {
+        return NewsResponseDTO
                 .builder()
                 .id(news.getId())
                 .content(news.getContent())
@@ -38,32 +38,32 @@ public class NewsMapper {
                 .build();
     }
 
-    public News newsDTOtoEntity (NewsDto newsDto) {
+    public News DTOToEntity(NewsRequestDTO newsRequestDTO) {
         return News
                 .builder()
-                .content(newsDto.getContent())
-                .name(newsDto.getName())
-                .image(newsDto.getImage())
+                .content(newsRequestDTO.getContent())
+                .name(newsRequestDTO.getName())
+                .image(newsRequestDTO.getImage())
                 .category(categoryRepository
-                        .findById(newsDto.getCategoryId())
+                        .findById(newsRequestDTO.getCategoryId())
                         .orElseThrow(() -> new EntityNotFoundException("Category doesn't found")))
-                .createDate(newsDto.getCreateDate())
-                .updateDate(new Date())
+                .createDate(LocalDateTime.now())
                 .build();
     }
 
-    public News newsDTOtoEntity (NewsDto newsDto, Long id) {
+    public News updateNews(NewsRequestDTO newsRequestDTO, News newsFromDB) {
+        if (newsRequestDTO.getCategoryId() == null) throw new EntityNotFoundException("Category can not be empty.");
         return News
                 .builder()
-                .id(id)
-                .content(newsDto.getContent())
-                .name(newsDto.getName())
-                .image(newsDto.getImage())
+                .id(newsFromDB.getId())
+                .content(newsRequestDTO.getContent())
+                .name(newsRequestDTO.getName())
+                .image(newsRequestDTO.getImage())
                 .category(categoryRepository
-                        .findById(newsDto.getCategoryId())
-                        .orElseThrow(() -> new EntityNotFoundException("Category doesn't found.")))
-                .createDate(newsDto.getCreateDate())
-                .updateDate(new Date())
+                        .findById(newsRequestDTO.getCategoryId())
+                        .orElseThrow(() -> new EntityNotFoundException("Category was not found.")))
+                .createDate(newsFromDB.getCreateDate())
+                .updateDate(LocalDateTime.now())
                 .build();
     }
 

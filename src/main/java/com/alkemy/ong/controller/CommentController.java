@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import java.util.Locale;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 
 @RestController
 @RequestMapping("/comments")
@@ -34,12 +36,21 @@ public class CommentController {
 
 
     @PostMapping
-    public ResponseEntity<CommentResponseDTO> save(
+    public ResponseEntity<CommentResponseDTO> create(
             @Valid @RequestBody CommentRequestDTO commentRequestDTO, HttpServletRequest request) throws Exception {
         CommentResponseDTO commentSaved = commentService.create(commentRequestDTO, request);
-        return ResponseEntity.ok().body(commentSaved);
+        return ResponseEntity.status(CREATED).body(commentSaved);
     }
 
+    @GetMapping
+    public ResponseEntity<List<CommentResponseDTO>> getAll() throws EmptyListException {
+        return ResponseEntity.ok().body(commentService.getAll());
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<CommentPageResponse> getCommentsPage (@RequestParam(defaultValue = "1") Integer pageNumber) throws NotFoundException {
+        return ResponseEntity.ok().body(commentService.getCommentsPage(pageNumber));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDTO> update(
@@ -54,16 +65,5 @@ public class CommentController {
         commentService.delete(id, request);
         return ResponseEntity.ok().body("Comment successfully deleted.");
     }
-
-    @GetMapping
-    public ResponseEntity<List<CommentResponseDTO>> getAll() throws EmptyListException {
-        return ResponseEntity.ok().body(commentService.getAll());
-    }
-
-    @GetMapping("/get-all")
-    public ResponseEntity<CommentPageResponse> getCommentsPage (@RequestParam(defaultValue = "1") Integer pageNumber) throws NotFoundException {
-        return ResponseEntity.ok().body(commentService.getCommentsPage(pageNumber));
-    }
-
 
 }

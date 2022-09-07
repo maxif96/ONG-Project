@@ -1,20 +1,15 @@
 package com.alkemy.ong.dto;
 
-import com.alkemy.ong.model.Category;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewsDto {
-
-
-    private Long id;
+public class NewsRequestDTO {
 
     @NotBlank(message = "Name can not be empty.")
     private String name;
@@ -25,9 +20,5 @@ public class NewsDto {
     private String image;
 
     private Long categoryId;
-
-    private Date createDate;
-
-    private Date updateDate;
 
 }
