@@ -4,8 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AmazonService {
 
-    public String uploadFile(MultipartFile multipartFile);
+    String uploadFile(MultipartFile multipartFile);
 
-    public String deleteFileFromS3Bucket(String fileUrl);
+    String deleteFileFromS3Bucket(String fileUrl);
 
 }

@@ -1,13 +1,7 @@
 package com.alkemy.ong.util;
 
-import com.alkemy.ong.model.Category;
-import com.alkemy.ong.model.News;
-import com.alkemy.ong.model.Role;
-import com.alkemy.ong.model.Users;
-import com.alkemy.ong.repository.CategoryRepository;
-import com.alkemy.ong.repository.NewsRepository;
-import com.alkemy.ong.repository.RoleRepository;
-import com.alkemy.ong.repository.UserRepository;
+import com.alkemy.ong.model.*;
+import com.alkemy.ong.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -19,6 +13,9 @@ import java.util.*;
 
 @Service
 public class SeederData {
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -37,6 +34,7 @@ public class SeederData {
 
     @EventListener
     public void eventListener(ContextRefreshedEvent contextRefreshedEvent) {
+        if (organizationRepository.findAll().isEmpty()) createOrganization();
         if (roleRepository.findAll().isEmpty()) createRole();
         if (userRepository.findAll().isEmpty()) createUsers();
         if(categoryRepository.count() < 3) createCategory();
@@ -141,6 +139,19 @@ public class SeederData {
         Category members = new Category("Us", "How we work", "cloud.ko/work.jpg", LocalDateTime.now());
 
         categoryRepository.saveAll(List.of(donations, today, members));
+    }
+
+    protected void createOrganization(){
+        organizationRepository.save(Organization
+                .builder()
+                .name("Organization Test")
+                .image("imageTest")
+                .address("Address Test")
+                .phone(465626865)
+                .email("mail@test.com")
+                .welcomeText("Welcome")
+                .aboutUsText("About organization test")
+                .build());
     }
 
 }

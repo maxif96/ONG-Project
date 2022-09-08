@@ -1,19 +1,25 @@
 package com.alkemy.ong.service.mapper;
 
-import com.alkemy.ong.dto.OrganizationDto;
-import com.alkemy.ong.dto.OrganizationUpdateDTO;
+import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
 import com.alkemy.ong.model.Organization;
+import com.alkemy.ong.repository.SlideRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class OrganizationMapper {
 
-    public OrganizationDto OrganizationEntityToDTO (Organization organization){
-        return OrganizationDto
+    @Autowired
+    private SlideMapper slideMapper;
+    @Autowired
+    private SlideRepository slideRepository;
+
+    public OrganizationResponseDTO entityToResponseDTO(Organization organization){
+        return OrganizationResponseDTO
                 .builder()
                 .id(organization.getId())
                 .name(organization.getEmail())
@@ -23,56 +29,14 @@ public class OrganizationMapper {
                 .urlFacebook(organization.getUrlFacebook())
                 .urlLinkedin(organization.getUrlLinkedin())
                 .urlInstagram(organization.getUrlInstagram())
+                .createdAt(organization.getCreationTimestamp())
+                .updatedAt(organization.getUpdateTimestamp())
+                .slides(organization.getSlides().stream()
+                        .map(x -> slideMapper.entityToDTO(x)).collect(Collectors.toList()))
                 .build();
     }
 
-    public OrganizationResponseDTO organizationDTOToResponseDto (OrganizationDto organization){
-        return OrganizationResponseDTO
-                .builder()
-                .id(organization.getId())
-                .name(organization.getName())
-                .image(organization.getImage())
-                .address(organization.getAddress())
-                .phone(organization.getPhone())
-                .urlFacebook(organization.getUrlFacebook())
-                .urlLinkedin(organization.getUrlLinkedin())
-                .urlInstagram(organization.getUrlInstagram())
-                .build();
-    }
-
-    public OrganizationUpdateDTO organizationEntityToOrganizationUpdateDTO (Organization organization){
-        return OrganizationUpdateDTO.builder()
-                .name(organization.getName())
-                .phone(organization.getPhone())
-                .address(organization.getAddress())
-                .image(organization.getImage())
-                .aboutUsText(organization.getAboutUsText())
-                .email(organization.getEmail())
-                .welcomeText(organization.getWelcomeText())
-                .urlFacebook(organization.getUrlFacebook())
-                .urlInstagram(organization.getUrlInstagram())
-                .urlLinkedin(organization.getUrlLinkedin())
-                .build();
-    }
-
-    public Organization organizationDTOToEntity (OrganizationUpdateDTO organizationDTO) {
-
-        return Organization.builder()
-                .name(organizationDTO.getName())
-                .address(organizationDTO.getAddress())
-                .phone(organizationDTO.getPhone())
-                .email(organizationDTO.getEmail())
-                .image(organizationDTO.getImage())
-                .aboutUsText(organizationDTO.getAboutUsText())
-                .welcomeText(organizationDTO.getWelcomeText())
-                .urlFacebook(organizationDTO.getUrlFacebook())
-                .urlInstagram(organizationDTO.getUrlInstagram())
-                .urlLinkedin(organizationDTO.getUrlLinkedin())
-                .updateTimestamp(LocalDateTime.now())
-                .build();
-    }
-
-    public Organization organizationUpdate (OrganizationUpdateDTO organizationDTO, Organization entity){
+    public Organization organizationUpdate (OrganizationRequestDTO organizationDTO, Organization entity){
         return Organization.builder()
                 .id(entity.getId())
                 .name(organizationDTO.getName())
@@ -85,6 +49,7 @@ public class OrganizationMapper {
                 .urlFacebook(organizationDTO.getUrlFacebook())
                 .urlInstagram(organizationDTO.getUrlInstagram())
                 .urlLinkedin(organizationDTO.getUrlLinkedin())
+                .slides(slideRepository.findAllById(organizationDTO.getSlidesId()))
                 .creationTimestamp(entity.getCreationTimestamp())
                 .updateTimestamp(LocalDateTime.now())
                 .build();

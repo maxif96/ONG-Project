@@ -1,9 +1,7 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.OrganizationDto;
-import com.alkemy.ong.dto.OrganizationUpdateDTO;
+import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
-import com.alkemy.ong.dto.response.SlideResponseDTO;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.OrganizationService;
@@ -14,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -28,31 +24,26 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private MessageSource messageSource;
 
-    @Override
-    public OrganizationDto getOrganizationPublic() {
-        Optional<Organization> organization = organizationRepository.findFirstByOrderById();
-        return organization.map(value -> organizationMapper.OrganizationEntityToDTO(value)).orElse(null);
+    public OrganizationResponseDTO getOrganizationPublic() {
+        Organization organization = organizationRepository
+                .findFirstByOrderById()
+                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+        return organizationMapper.entityToResponseDTO(organization);
     }
+
 
     @Transactional
-    public OrganizationUpdateDTO updateOrganization(OrganizationUpdateDTO organizationUpdateDTO) {
-        /* Validate if exists in DB */
-        Optional<Organization> organizationEntity = organizationRepository.findFirstByOrderById();
-        if (organizationEntity.isEmpty()) throw new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US));
-        /* Update */
-        Organization organizationUpdated = organizationMapper.organizationUpdate(organizationUpdateDTO, organizationEntity.get());
-        /* Save and turn the updated entity into DTO and return it */
+    public OrganizationResponseDTO update(OrganizationRequestDTO organizationRequestDTO) {
+        Organization organizationFromDB = organizationRepository
+                .findFirstByOrderById()
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US)));
+
+        Organization organizationUpdatedToSave = organizationMapper.organizationUpdate(organizationRequestDTO, organizationFromDB);
         return organizationMapper
-                .organizationEntityToOrganizationUpdateDTO(organizationRepository
-                        .save(organizationUpdated));
+                .entityToResponseDTO(organizationRepository
+                        .save(organizationUpdatedToSave));
     }
 
-    @Override
-    public OrganizationResponseDTO getOrganizationResponseDTO(List<SlideResponseDTO> slidesDtos, OrganizationDto organizationResponse) {
-        OrganizationResponseDTO organizationResponseDTO=organizationMapper.organizationDTOToResponseDto(organizationResponse);
-        organizationResponseDTO.setSlides(slidesDtos);
-        return organizationResponseDTO;
-    }
 
 
 }

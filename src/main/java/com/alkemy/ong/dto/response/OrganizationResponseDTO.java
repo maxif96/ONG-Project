@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,23 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class OrganizationResponseDTO {
+
     private Long id;
-    @NotNull(message = "Name can not be empty.")
     private String name;
-
-    @NotNull(message = "Image can not be empty.")
     private String image;
-
-    @NotNull(message = "Address can not be empty.")
     private String address;
-
-    @NotNull(message = "Phone can not be empty.")
+    private String email;
     private Integer phone;
-
+    private String aboutUsText;
+    private String welcomeText;
     private String urlFacebook;
-
     private String urlLinkedin;
-
     private String urlInstagram;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<SlideResponseDTO> slides;
 }

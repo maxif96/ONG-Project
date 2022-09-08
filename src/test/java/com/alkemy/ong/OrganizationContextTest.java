@@ -1,7 +1,7 @@
 package com.alkemy.ong;
 
 
-import com.alkemy.ong.dto.OrganizationUpdateDTO;
+import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +28,7 @@ public class OrganizationContextTest {
                                    String email, String welcomeText, String aboutUsText,
                                    String urlFacebook, String urlInstagram, String urlLinkedin) throws JsonProcessingException {
 
-        return objectMapper.writeValueAsString(OrganizationUpdateDTO.builder()
+        return objectMapper.writeValueAsString(OrganizationRequestDTO.builder()
                 .name(name)
                 .image(image)
                 .address(address)
