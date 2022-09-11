@@ -10,7 +10,7 @@ import com.alkemy.ong.repository.CommentRepository;
 import com.alkemy.ong.repository.NewsRepository;
 import com.alkemy.ong.service.NewsService;
 import com.alkemy.ong.service.mapper.NewsMapper;
-import com.alkemy.ong.service.mapper.comment.CommentMapper;
+import com.alkemy.ong.service.mapper.CommentMapper;
 import com.alkemy.ong.util.PaginationUtil;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -66,20 +66,23 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
     }
 
     @Transactional
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException(
                 "News ".concat(messageSource.getMessage("not.found", null, Locale.US)));
         repository.deleteById(id);
     }
+
     @Transactional(readOnly = true)
     public NewsPageResponse pagination(Integer numberOfPage) throws NotFoundException {
-        if (numberOfPage < 1) throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
+        if (numberOfPage < 1)
+            throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
 
         Page<News> page = getPage(numberOfPage);
         String previousUrl = urlGetPrevious(numberOfPage);
         String nextUrl = urlGetNext(page, numberOfPage);
 
-        if (page.getTotalPages() < numberOfPage) throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
+        if (page.getTotalPages() < numberOfPage)
+            throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
         return newsMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +66,7 @@ public class NewsMapper {
                 .build();
     }
 
-    public NewsResponseDTO entityToResponse (News newEntity){
+    public NewsResponseDTO entityToResponse(News newEntity) {
         return NewsResponseDTO.builder()
                 .id(newEntity.getId())
                 .name(newEntity.getName())
@@ -78,7 +77,7 @@ public class NewsMapper {
                 .build();
     }
 
-    public NewsPageResponse buildPageResponse(List<News> members, String previous, String next){
+    public NewsPageResponse buildPageResponse(List<News> members, String previous, String next) {
         return NewsPageResponse.builder()
                 .news(members.stream()
                         .map(this::entityToResponse)

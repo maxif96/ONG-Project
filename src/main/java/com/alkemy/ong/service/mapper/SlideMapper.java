@@ -20,7 +20,7 @@ public class SlideMapper {
     @Autowired
     private MessageSource messageSource;
 
-    public SlideResponseDTO entityToDTO (Slide slideEntity){
+    public SlideResponseDTO entityToDTO(Slide slideEntity) {
         return SlideResponseDTO.builder()
                 .id(slideEntity.getId())
                 .text(slideEntity.getText())
@@ -30,7 +30,7 @@ public class SlideMapper {
                 .build();
     }
 
-    public Slide updateSlide (SlideRequestDTO request, Slide entityFromDB){
+    public Slide updateSlide(SlideRequestDTO request, Slide entityFromDB) {
 
         Slide slide = Slide.builder()
                 .id(entityFromDB.getId())

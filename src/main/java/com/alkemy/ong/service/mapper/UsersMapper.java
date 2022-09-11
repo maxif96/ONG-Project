@@ -11,7 +11,7 @@ import java.util.List;
 public class UsersMapper {
 
 
-    public UserResponseDTO userEntityToDTO (Users user) {
+    public UserResponseDTO userEntityToDTO(Users user) {
         return UserResponseDTO
                 .builder()
                 .id(user.getId())
@@ -24,9 +24,9 @@ public class UsersMapper {
                 .build();
     }
 
-    public List<UserResponseDTO> userEntityListToDTOList (List<Users> usersEntity) {
+    public List<UserResponseDTO> userEntityListToDTOList(List<Users> usersEntity) {
         List<UserResponseDTO> userResponseDTOList = new ArrayList<>();
-        for (Users users: usersEntity) {
+        for (Users users : usersEntity) {
             userResponseDTOList.add(userEntityToDTO(users));
         }
         return userResponseDTOList;

@@ -8,9 +8,12 @@ import javassist.NotFoundException;
 
 public interface ActivityService {
 
-    ActivityResponseDTO update (Long id, ActivityRequestDTO activityRequestDTO);
+    ActivityResponseDTO update(Long id, ActivityRequestDTO activityRequestDTO);
+
     ActivityResponseDTO create(ActivityRequestDTO activityRequestDTO) throws NameAlreadyExists;
-    void delete (Long id);
+
+    void delete(Long id);
+
     ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException;
 
 }

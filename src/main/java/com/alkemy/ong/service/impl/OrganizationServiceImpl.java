@@ -25,25 +25,18 @@ public class OrganizationServiceImpl implements OrganizationService {
     private MessageSource messageSource;
 
     public OrganizationResponseDTO getOrganizationPublic() {
-        Organization organization = organizationRepository
-                .findFirstByOrderById()
-                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+        Organization organization = organizationRepository.findFirstByOrderById().orElseThrow(() -> new EntityNotFoundException("Organization not found"));
         return organizationMapper.entityToResponseDTO(organization);
     }
 
 
     @Transactional
     public OrganizationResponseDTO update(OrganizationRequestDTO organizationRequestDTO) {
-        Organization organizationFromDB = organizationRepository
-                .findFirstByOrderById()
-                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US)));
+        Organization organizationFromDB = organizationRepository.findFirstByOrderById().orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US)));
 
         Organization organizationUpdatedToSave = organizationMapper.organizationUpdate(organizationRequestDTO, organizationFromDB);
-        return organizationMapper
-                .entityToResponseDTO(organizationRepository
-                        .save(organizationUpdatedToSave));
+        return organizationMapper.entityToResponseDTO(organizationRepository.save(organizationUpdatedToSave));
     }
-
 
 
 }

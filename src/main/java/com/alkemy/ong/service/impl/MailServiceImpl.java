@@ -1,14 +1,15 @@
 package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.service.MailService;
+import com.alkemy.ong.util.Constants;
 import com.alkemy.ong.util.DynamicTemplatePersonalization;
 import com.sendgrid.*;
-import com.alkemy.ong.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 
 @Service
@@ -66,7 +67,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public String sendEmailCreatedContact(String email) throws IOException {
-       Email from = new Email(Constants.SEND_GRID_SENDER_EMAIL);
+        Email from = new Email(Constants.SEND_GRID_SENDER_EMAIL);
         String subject = Constants.SEND_GRID_WELCOME;
         Email to = new Email(email);
         Mail mail = new Mail();
@@ -78,7 +79,7 @@ public class MailServiceImpl implements MailService {
         personalization.addDynamicTemplateData("text", Constants.SEND_GRID_TEMPLATE_MESSAGE_CONTACT);
         mail.addPersonalization(personalization);
         mail.setTemplateId(dynamicTemplateId);
-        
+
         return sendGivenMail(mail);
     }
 

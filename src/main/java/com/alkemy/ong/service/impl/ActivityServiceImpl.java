@@ -9,8 +9,6 @@ import com.alkemy.ong.repository.ActivityRepository;
 import com.alkemy.ong.service.ActivityService;
 import com.alkemy.ong.service.mapper.ActivityMapper;
 import com.alkemy.ong.util.PaginationUtil;
-import com.amazonaws.services.kms.model.AlreadyExistsException;
-import com.amazonaws.services.workdocs.model.EntityAlreadyExistsException;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -37,9 +35,10 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
         Activity activitySaved = repository.save(activity);
         return activityMapper.entityToResponseDTO(activitySaved);
     }
+
     @Transactional(readOnly = true)
     public ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException {
-        if(pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
+        if (pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
         Page<Activity> page = getPage(pageNumber);
         String previousUrl = urlGetPrevious(pageNumber);
         String nextUrl = urlGetNext(page, pageNumber);
@@ -53,8 +52,8 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
         Activity activity = repository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                                "Activity " + messageSource.getMessage(
-                                        "not.found", null, Locale.US)));
+                        "Activity " + messageSource.getMessage(
+                                "not.found", null, Locale.US)));
 
         activity = activityMapper.updateEntity(activityRequestDTO, activity);
         Activity activityUpdated = repository.save(activity);

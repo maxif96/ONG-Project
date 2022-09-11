@@ -4,7 +4,7 @@ import com.alkemy.ong.dto.MemberRequestDTO;
 import com.alkemy.ong.dto.response.MemberResponseDTO;
 import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.service.MemberService;
-import com.alkemy.ong.util.MemberPageResponse;
+import com.alkemy.ong.dto.response.MemberPageResponse;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

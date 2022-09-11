@@ -16,13 +16,13 @@ public class DynamicTemplatePersonalization extends Personalization {
 
     @JsonProperty("dynamic_template_data")
     public Map<String, String> getDynamicTemplateData() {
-        if (dynamic_template_data == null) return Collections.<String, String>emptyMap();
+        if (dynamic_template_data == null) return Collections.emptyMap();
         return dynamic_template_data;
     }
 
-    public void clearData( ) {
-         this.dynamic_template_data = null;
-        }
+    public void clearData() {
+        this.dynamic_template_data = null;
+    }
 
     public void addDynamicTemplateData(String key, String value) {
         if (dynamic_template_data == null) {

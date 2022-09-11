@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,14 +19,14 @@ public interface NewsDocumentation {
     @ApiOperation(value = "Create a new.")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "New was created successfully"),
-            @ApiResponse(code = 400, message = "Bad request. Some field is invalid." )})
+            @ApiResponse(code = 400, message = "Bad request. Some field is invalid.")})
     @ApiParam(value = "New to create body", required = true)
     ResponseEntity<NewsResponseDTO> create(NewsRequestDTO newsDto);
 
     @ApiOperation(value = "Get a page with 10 items according to the page number.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Page found successfully"),
-            @ApiResponse(code = 404, message = "Page doesn't have elements" )})
+            @ApiResponse(code = 404, message = "Page doesn't have elements")})
     @ApiParam(value = "Number of page", required = true, defaultValue = "1")
     ResponseEntity<NewsPageResponse> getNewsPage(Integer page) throws NotFoundException;
 

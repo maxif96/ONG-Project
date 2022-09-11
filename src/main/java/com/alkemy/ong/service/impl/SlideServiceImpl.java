@@ -13,12 +13,12 @@ import com.alkemy.ong.util.Base64ToMultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class SlideServiceImpl implements SlideService {
@@ -30,7 +30,7 @@ public class SlideServiceImpl implements SlideService {
     private SlideRepository slideRepository;
     @Autowired
     private SlideMapper slideMapper;
-    
+
     @Autowired
     private SlidesMapper slidesMapper;
 
@@ -68,6 +68,7 @@ public class SlideServiceImpl implements SlideService {
 
         return slideMapper.entityToDTO(slideUpdated);
     }
+
     public void deleteById(Long id) {
         Slide slide = slideRepository
                 .findById(id)
@@ -75,11 +76,11 @@ public class SlideServiceImpl implements SlideService {
         slideRepository.delete(slide);
     }
 
-    private SlidesDto toDto(Slide slides){
+    private SlidesDto toDto(Slide slides) {
         return new SlidesDto(slides.getImageUrl(), slides.getPosition());
     }
-    
-     @Override
+
+    @Override
     public SlidesDto createSlides(SlidesDto slidesDto) throws Exception {
         try {
             Slide slides = slidesMapper.slidesDtoToSlides(slidesDto);
@@ -97,7 +98,7 @@ public class SlideServiceImpl implements SlideService {
             return slidesMapper.slidesToSlidesDto(slideDB);
 
         } catch (Exception e) {
-         throw new Exception(messageSource.getMessage("error.created.slide", null, Locale.US));
+            throw new Exception(messageSource.getMessage("error.created.slide", null, Locale.US));
         }
 
     }

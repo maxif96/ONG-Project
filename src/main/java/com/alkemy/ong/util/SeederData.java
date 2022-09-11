@@ -9,26 +9,40 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class SeederData {
 
+    List<String> newsName = List.of("The Largest Investor of our NGO", "Why choose us?", "We are happy",
+            "Incredible things happens", "A big new", "Come here and look this", "How did we make this possible?",
+            "No beginning, no end", "To a new world", "A miracle",
+            "Incredible things happens", "A big new");
+    List<String> newsContent = List.of("\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
+            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
+            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
+            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...", "\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
+            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
+            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
+            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...", "\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
+            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
+            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
+            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...");
+    List<String> newsImage = List.of("images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg",
+            "images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg",
+            "images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg");
     @Autowired
     private OrganizationRepository organizationRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private NewsRepository newsRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -37,8 +51,8 @@ public class SeederData {
         if (organizationRepository.findAll().isEmpty()) createOrganization();
         if (roleRepository.findAll().isEmpty()) createRole();
         if (userRepository.findAll().isEmpty()) createUsers();
-        if(categoryRepository.count() < 3) createCategory();
-        if(newsRepository.count() < 100) createNews(100 - newsRepository.count());
+        if (categoryRepository.count() < 3) createCategory();
+        if (newsRepository.count() < 100) createNews(100 - newsRepository.count());
     }
 
     public void createRole() {
@@ -103,37 +117,20 @@ public class SeederData {
         userRepository.saveAll(usuarios);
     }
 
-    List<String> newsName = List.of("The Largest Investor of our NGO", "Why choose us?", "We are happy",
-            "Incredible things happens", "A big new", "Come here and look this", "How did we make this possible?",
-            "No beginning, no end", "To a new world", "A miracle",
-            "Incredible things happens", "A big new");
-    List<String> newsContent = List.of("\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
-            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
-            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
-            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...","\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
-            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
-            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
-            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...","\"Our country has lost four of its very best citizens. We families lost loved ones forever,\" she said....",
-            "In April, the 12-person jury deliberated for less than six hours over two days before finding Elsheikh guilty...",
-            "Witnesses recounted receiving random beatings, being given dog names and being forced to sing a parody of the Eagles' pop song \"Hotel California\" retitled \"Hotel Osama\"...",
-            "The three members - Elsheikh, Alexanda Kotey and Mohammed Emwazi - who are said to be part of...");
-    List<String> newsImage = List.of("images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg",
-            "images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg",
-            "images.com/investor.jpg", "images.com/us.jpg", "images.com/things.jpg", "images.com/incredible.jpg");
-
-    public void createNews (Long timesToCreate){
+    public void createNews(Long timesToCreate) {
         Random random = new Random();
         List<Category> categories = List.of(categoryRepository.findById(1L).get(), categoryRepository.findById(2L).get(), categoryRepository.findById(1L).get());
         List<News> news = new ArrayList<>();
 
-        for (int i = 0; i < timesToCreate; i++){
+        for (int i = 0; i < timesToCreate; i++) {
             int categoryNumber = random.nextInt(3);
             int randomNumber = random.nextInt(newsName.size());
             news.add(new News(newsName.get(randomNumber), newsContent.get(randomNumber), newsImage.get(randomNumber), categories.get(categoryNumber), LocalDateTime.now()));
         }
         newsRepository.saveAll(news);
     }
-    public void createCategory (){
+
+    public void createCategory() {
         Category donations = new Category("Donations", "Donations", "cloud.ko/help.jpg", LocalDateTime.now());
         Category today = new Category("Today", "Daily news", "cloud.ko/today.jpg", LocalDateTime.now());
         Category members = new Category("Us", "How we work", "cloud.ko/work.jpg", LocalDateTime.now());
@@ -141,7 +138,7 @@ public class SeederData {
         categoryRepository.saveAll(List.of(donations, today, members));
     }
 
-    protected void createOrganization(){
+    protected void createOrganization() {
         organizationRepository.save(Organization
                 .builder()
                 .name("We are the best NGO")

@@ -1,4 +1,4 @@
-package com.alkemy.ong.util;
+package com.alkemy.ong.dto.response;
 
 import com.alkemy.ong.dto.response.MemberResponseDTO;
 import lombok.Builder;

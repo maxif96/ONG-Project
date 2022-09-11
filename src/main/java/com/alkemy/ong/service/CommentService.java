@@ -13,9 +13,13 @@ import java.util.List;
 public interface CommentService {
 
     CommentResponseDTO create(CommentRequestDTO dto, HttpServletRequest request) throws Exception;
+
     List<CommentResponseDTO> getAll() throws EmptyListException;
-    CommentPageResponse getCommentsPage (Integer pageNumber) throws NotFoundException;
+
+    CommentPageResponse getCommentsPage(Integer pageNumber) throws NotFoundException;
+
     void delete(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException;
+
     CommentResponseDTO update(CommentRequestDTO commentRequestDTO, Long id, String token) throws UnauthorizedException;
 
 }

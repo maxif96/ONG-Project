@@ -1,4 +1,4 @@
-package com.alkemy.ong.service.mapper.comment;
+package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.CommentRequestDTO;
 import com.alkemy.ong.dto.response.CommentPageResponse;
@@ -26,7 +26,7 @@ public class CommentMapper {
     public CommentMapper() {
     }
 
-    public CommentResponseDTO entityToResponseDTO (Comment comment){
+    public CommentResponseDTO entityToResponseDTO(Comment comment) {
         return CommentResponseDTO.builder()
                 .id(comment.getId())
                 .body(comment.getBody())

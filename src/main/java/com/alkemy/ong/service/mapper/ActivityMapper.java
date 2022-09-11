@@ -7,17 +7,13 @@ import com.alkemy.ong.model.Activity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class ActivityMapper {
 
-    public Activity updateEntity (ActivityRequestDTO request, Activity entityFromDB){
+    public Activity updateEntity(ActivityRequestDTO request, Activity entityFromDB) {
         return Activity.builder()
                 .id(entityFromDB.getId())
                 .name(request.getName())
@@ -28,7 +24,7 @@ public class ActivityMapper {
                 .build();
     }
 
-    public ActivityResponseDTO entityToResponseDTO (Activity activity){
+    public ActivityResponseDTO entityToResponseDTO(Activity activity) {
 
         return ActivityResponseDTO.builder()
                 .id(activity.getId())
@@ -40,7 +36,7 @@ public class ActivityMapper {
 
     }
 
-    public Activity requestDTOToEntity (ActivityRequestDTO activityRequestDTO){
+    public Activity requestDTOToEntity(ActivityRequestDTO activityRequestDTO) {
         return Activity.builder()
                 .name(activityRequestDTO.name)
                 .content(activityRequestDTO.content)

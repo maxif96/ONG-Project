@@ -7,12 +7,6 @@ import com.alkemy.ong.model.Testimonial;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.service.mapper.TestimonialMapper;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -20,6 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TestimonialServiceImpl implements TestimonialService {
@@ -29,7 +29,7 @@ public class TestimonialServiceImpl implements TestimonialService {
 
     @Autowired
     private TestimonialMapper testimonialMapper;
-    
+
     @Autowired
     private MessageSource messageSource;
 
@@ -47,12 +47,12 @@ public class TestimonialServiceImpl implements TestimonialService {
 
         testimonialRepository.save(testimonial);
         Testimonial testimonialEntity = testimonialMapper.testimonialDtoToTestimonial(testimonialDto);
-      return testimonialMapper.testimonialToTestimonialDto(testimonialEntity);
+        return testimonialMapper.testimonialToTestimonialDto(testimonialEntity);
     }
 
     @Override
     public TestimonialPageResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort =  sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
@@ -84,10 +84,10 @@ public class TestimonialServiceImpl implements TestimonialService {
     public void deleteTestimonial(Long id) {
         Optional<Testimonial> response = testimonialRepository.findById(id);
         if (response.isPresent()) {
-           testimonialRepository.deleteById(id);
-        }else{
+            testimonialRepository.deleteById(id);
+        } else {
             throw new EntityNotFoundException(messageSource.getMessage("testimonial.notFound", null, Locale.US));
         }
-        
+
     }
 }

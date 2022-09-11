@@ -7,7 +7,7 @@ import com.alkemy.ong.model.Contact;
 import com.alkemy.ong.repository.ContactRepository;
 import com.alkemy.ong.service.ContactService;
 import com.alkemy.ong.service.MailService;
-import com.alkemy.ong.service.mapper.contact.ContactMapper;
+import com.alkemy.ong.service.mapper.ContactMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,7 @@ public class ContactServiceImpl implements ContactService {
         }
         return contactMapper.entityToResponseDTO(newContact);
     }
+
     @Transactional(readOnly = true)
     public List<ContactResponseDTO> searchAllContacts() throws EmptyListException {
         if (contactRepository.count() < 1) throw new EmptyListException("No one contact was found.");

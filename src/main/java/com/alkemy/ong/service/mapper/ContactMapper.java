@@ -1,4 +1,4 @@
-package com.alkemy.ong.service.mapper.contact;
+package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.ContactRequestDTO;
 import com.alkemy.ong.dto.response.ContactResponseDTO;
@@ -25,5 +25,5 @@ public class ContactMapper {
                 .email(contactRequestDTO.getEmail())
                 .message(contactRequestDTO.getMessage())
                 .build();
-        }
+    }
 }

@@ -1,14 +1,10 @@
 package com.alkemy.ong.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+import java.util.Base64;
 
 @NoArgsConstructor
 public class Base64ToMultipartFile implements MultipartFile {
@@ -20,7 +16,7 @@ public class Base64ToMultipartFile implements MultipartFile {
         this.imgContent = imgContent;
         this.header = header.split(";")[0];
     }
-    
+
 
     @Override
     public String getName() {
@@ -61,7 +57,7 @@ public class Base64ToMultipartFile implements MultipartFile {
     public void transferTo(File dest) throws IOException, IllegalStateException {
         new FileOutputStream(dest).write(imgContent);
     }
-    
+
     public MultipartFile base64ToMultipart(String base64) {
         String[] baseStrs = base64.split(",");
 

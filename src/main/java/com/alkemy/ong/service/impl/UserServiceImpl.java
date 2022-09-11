@@ -29,9 +29,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UsersMapper usersMapper;
 
-    @Autowired private JwUtils jwUtils;
+    @Autowired
+    private JwUtils jwUtils;
     @Autowired
     private MessageSource messageSource;
+
     public List<UserResponseDTO> getAll() {
         return usersMapper.userEntityListToDTOList(userRepository.findAll());
     }
@@ -40,16 +42,16 @@ public class UserServiceImpl implements UserService {
     public Users applyPatchToUser(long id, UserDto patch) {
         Optional<Users> user = userRepository.findById(id);
         if (user.isEmpty()) return null;
-        user.ifPresent(userTemp->{
-                    userTemp.setFirstName(patch.getFirstName());
-                    userTemp.setLastName(patch.getLastName());
-                    userTemp.setPhoto(patch.getPhoto());
-                    userTemp.setRole(roleRepository.findById(patch.getRoleId()).get());
-                    userTemp.setEmail(patch.getEmail());
-                    userTemp.setPassword(patch.getPassword());
-                });
+        user.ifPresent(userTemp -> {
+            userTemp.setFirstName(patch.getFirstName());
+            userTemp.setLastName(patch.getLastName());
+            userTemp.setPhoto(patch.getPhoto());
+            userTemp.setRole(roleRepository.findById(patch.getRoleId()).get());
+            userTemp.setEmail(patch.getEmail());
+            userTemp.setPassword(patch.getPassword());
+        });
         return userRepository.save(user.get());
-       }
+    }
 
     @Override
     public UserResponseDTO getUserDataByToken(String token) {

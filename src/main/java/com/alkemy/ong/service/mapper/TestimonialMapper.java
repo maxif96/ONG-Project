@@ -1,4 +1,3 @@
-
 package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.TestimonialDto;
@@ -7,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TestimonialMapper {
-    
-     public TestimonialDto testimonialToTestimonialDto (Testimonial testimonial){
+
+    public TestimonialDto testimonialToTestimonialDto(Testimonial testimonial) {
         return TestimonialDto
                 .builder()
                 .name(testimonial.getName())
@@ -16,7 +15,8 @@ public class TestimonialMapper {
                 .content(testimonial.getContent())
                 .build();
     }
-     public Testimonial testimonialDtoToTestimonial (TestimonialDto testimonialDto){
+
+    public Testimonial testimonialDtoToTestimonial(TestimonialDto testimonialDto) {
         return Testimonial
                 .builder()
                 .name(testimonialDto.getName())
@@ -24,6 +24,6 @@ public class TestimonialMapper {
                 .content(testimonialDto.getContent())
                 .build();
     }
-    
-    
+
+
 }

@@ -12,9 +12,14 @@ import java.util.List;
 public interface NewsService {
 
     NewsResponseDTO createNews(NewsRequestDTO newsDto);
+
     NewsResponseDTO findNewsById(Long id) throws NameAlreadyExists;
+
     NewsResponseDTO updateNews(NewsRequestDTO newsRequestDTO, Long id);
+
     void deleteById(Long id);
-    NewsPageResponse pagination (Integer numberOfPage) throws NotFoundException;
+
+    NewsPageResponse pagination(Integer numberOfPage) throws NotFoundException;
+
     List<CommentResponseDTO> findCommentByNewsId(Long newsId) throws Exception;
 }

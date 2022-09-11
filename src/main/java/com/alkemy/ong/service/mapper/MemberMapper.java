@@ -3,18 +3,17 @@ package com.alkemy.ong.service.mapper;
 import com.alkemy.ong.dto.MemberRequestDTO;
 import com.alkemy.ong.dto.response.MemberResponseDTO;
 import com.alkemy.ong.model.Member;
-import com.alkemy.ong.util.MemberPageResponse;
+import com.alkemy.ong.dto.response.MemberPageResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class MemberMapper {
 
-    public MemberResponseDTO entityToResponseDTO(Member member){
+    public MemberResponseDTO entityToResponseDTO(Member member) {
         return MemberResponseDTO.builder()
                 .id(member.getId())
                 .name(member.getName())
@@ -27,7 +26,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public Member requestDTOTOEntity(MemberRequestDTO memberRequestDTO){
+    public Member requestDTOTOEntity(MemberRequestDTO memberRequestDTO) {
         return Member.builder()
                 .name(memberRequestDTO.getName())
                 .facebookUrl(memberRequestDTO.getFacebookUrl())

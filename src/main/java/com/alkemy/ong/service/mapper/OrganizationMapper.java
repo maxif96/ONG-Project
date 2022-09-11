@@ -18,7 +18,7 @@ public class OrganizationMapper {
     @Autowired
     private SlideRepository slideRepository;
 
-    public OrganizationResponseDTO entityToResponseDTO(Organization organization){
+    public OrganizationResponseDTO entityToResponseDTO(Organization organization) {
         return OrganizationResponseDTO
                 .builder()
                 .id(organization.getId())
@@ -36,7 +36,7 @@ public class OrganizationMapper {
                 .build();
     }
 
-    public Organization organizationUpdate (OrganizationRequestDTO organizationDTO, Organization entity){
+    public Organization organizationUpdate(OrganizationRequestDTO organizationDTO, Organization entity) {
         return Organization.builder()
                 .id(entity.getId())
                 .name(organizationDTO.getName())
