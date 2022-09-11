@@ -49,10 +49,8 @@ public class OrganizationMapper {
                 .urlFacebook(organizationDTO.getUrlFacebook())
                 .urlInstagram(organizationDTO.getUrlInstagram())
                 .urlLinkedin(organizationDTO.getUrlLinkedin())
-                .slides(slideRepository.findAllById(organizationDTO.getSlidesId()))
                 .creationTimestamp(entity.getCreationTimestamp())
                 .updateTimestamp(LocalDateTime.now())
                 .build();
-
     }
 }

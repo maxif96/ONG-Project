@@ -144,13 +144,13 @@ public class SeederData {
     protected void createOrganization(){
         organizationRepository.save(Organization
                 .builder()
-                .name("Organization Test")
-                .image("imageTest")
-                .address("Address Test")
+                .name("We are the best NGO")
+                .image("best-ong.jpg")
+                .address("Random Adress 4903")
                 .phone(465626865)
-                .email("mail@test.com")
-                .welcomeText("Welcome")
-                .aboutUsText("About organization test")
+                .email("thebestong@ngo.com")
+                .welcomeText("Welcome to the best web-page about a NGO")
+                .aboutUsText("We are the best NGO and we do our job well.")
                 .build());
     }
 
