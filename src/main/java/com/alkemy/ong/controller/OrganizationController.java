@@ -2,6 +2,7 @@ package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.service.OrganizationService;
 import com.alkemy.ong.service.SlideService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/public")
-    public ResponseEntity<OrganizationResponseDTO> update(@Valid @RequestBody OrganizationRequestDTO organizationRequestDTO) {
+    public ResponseEntity<OrganizationResponseDTO> update(@Valid @RequestBody OrganizationRequestDTO organizationRequestDTO) throws EmptyListException {
         OrganizationResponseDTO organizationUpdated = organizationService.update(organizationRequestDTO);
         return ResponseEntity.ok().body(organizationUpdated);
     }

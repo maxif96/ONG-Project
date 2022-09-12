@@ -14,6 +14,7 @@ public interface SlideRepository extends JpaRepository<Slide, Long> {
     List<Slide> findByOrganizationId(Long id);
 
     @Query("SELECT MAX(s.position) FROM Slide s")
-    public Integer lastPosition();
+    Integer lastPosition();
+
 
 }

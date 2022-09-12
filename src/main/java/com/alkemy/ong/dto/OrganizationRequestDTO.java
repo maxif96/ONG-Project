@@ -27,6 +27,5 @@ public class OrganizationRequestDTO {
     private String urlFacebook;
     private String urlLinkedin;
     private String urlInstagram;
-    private List<Long> slidesId;
 
 }

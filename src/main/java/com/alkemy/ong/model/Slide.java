@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -13,6 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Table(name = "slides")
+@SQLDelete(sql = "UPDATE slides SET deleted = true WHERE id =?")
+@Where(clause = "deleted = false")
 public class Slide {
 
     @Id
@@ -29,6 +33,6 @@ public class Slide {
             joinColumns = {@JoinColumn(name = "slide_id")},
             inverseJoinColumns = {@JoinColumn(name = "organization_id")})
     private Organization organization;
-
+    private boolean deleted;
 
 }

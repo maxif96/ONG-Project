@@ -1,8 +1,8 @@
 package com.alkemy.ong.service;
 
 import com.alkemy.ong.dto.SlideRequestDTO;
-import com.alkemy.ong.dto.SlidesDto;
 import com.alkemy.ong.dto.response.SlideResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ public interface SlideService {
 
     SlideResponseDTO getById(Long id);
 
-    List<SlidesDto> getAllSlides();
+    List<SlideResponseDTO> getAllSlides() throws EmptyListException;
 
-    List<SlideResponseDTO> getAllSlidesById(Long id);
+    List<SlideResponseDTO> getAllSlidesById(Long id) throws EmptyListException;
 
-    SlidesDto createSlides(SlidesDto slidesDto) throws Exception;
+    SlideResponseDTO createSlides(SlideRequestDTO slidesRequest) throws Exception;
 
     void deleteById(Long id);
 

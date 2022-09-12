@@ -2,6 +2,7 @@ package com.alkemy.ong.service.impl;
 
 import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.service.OrganizationService;
@@ -24,14 +25,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private MessageSource messageSource;
 
-    public OrganizationResponseDTO getOrganizationPublic() {
+    public OrganizationResponseDTO getOrganizationPublic() throws EmptyListException {
         Organization organization = organizationRepository.findFirstByOrderById().orElseThrow(() -> new EntityNotFoundException("Organization not found"));
         return organizationMapper.entityToResponseDTO(organization);
     }
 
-
     @Transactional
-    public OrganizationResponseDTO update(OrganizationRequestDTO organizationRequestDTO) {
+    public OrganizationResponseDTO update(OrganizationRequestDTO organizationRequestDTO) throws EmptyListException {
         Organization organizationFromDB = organizationRepository.findFirstByOrderById().orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("error.organization.not.present", null, Locale.US)));
 
         Organization organizationUpdatedToSave = organizationMapper.organizationUpdate(organizationRequestDTO, organizationFromDB);

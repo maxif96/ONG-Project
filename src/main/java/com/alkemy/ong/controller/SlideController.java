@@ -1,8 +1,8 @@
 package com.alkemy.ong.controller;
 
 import com.alkemy.ong.dto.SlideRequestDTO;
-import com.alkemy.ong.dto.SlidesDto;
 import com.alkemy.ong.dto.response.SlideResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.service.SlideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/slides")
@@ -23,27 +22,21 @@ public class SlideController {
     @Autowired
     private MessageSource messageSource;
 
+
+    @PostMapping
+    public ResponseEntity<SlideResponseDTO> create(@RequestBody SlideRequestDTO slideRequestDTO) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED).body(slideService.createSlides(slideRequestDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SlideResponseDTO>> getAllSlides() throws EmptyListException {
+        return ResponseEntity.ok().body(slideService.getAllSlides());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<SlideResponseDTO> getById(@PathVariable Long id) {
         SlideResponseDTO slideResponse = slideService.getById(id);
         return ResponseEntity.ok().body(slideResponse);
-    }
-
-    @PostMapping()
-    public ResponseEntity<?> createSlide(@RequestBody SlidesDto slidesDto) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(slideService.createSlides(slidesDto));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getAllSlides() {
-        List<SlidesDto> slidesDtos = slideService.getAllSlides();
-        return slidesDtos
-                .isEmpty() ? new ResponseEntity<>(messageSource.getMessage("error.not.slides", null, Locale.US), HttpStatus.OK)
-                : new ResponseEntity<>(slidesDtos, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -54,12 +47,8 @@ public class SlideController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSlide(@PathVariable(name = "id") Long id) {
-        try {
-            slideService.deleteById(id);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(messageSource.getMessage("slides.deleted.message", null, Locale.US), HttpStatus.OK);
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
+        slideService.deleteById(id);
+        return ResponseEntity.ok().body("Slide successfully deleted.");
     }
 }

@@ -20,7 +20,8 @@ public class SlideMapper {
     @Autowired
     private MessageSource messageSource;
 
-    public SlideResponseDTO entityToDTO(Slide slideEntity) {
+    public SlideResponseDTO entityToResponseDTO(Slide slideEntity) {
+        if (!organizationRepository.existsById(slideEntity.getOrganization().getId())) throw new EntityNotFoundException("Organization not found.");
         return SlideResponseDTO.builder()
                 .id(slideEntity.getId())
                 .text(slideEntity.getText())
@@ -31,22 +32,26 @@ public class SlideMapper {
     }
 
     public Slide updateSlide(SlideRequestDTO request, Slide entityFromDB) {
-
-        Slide slide = Slide.builder()
+        return Slide.builder()
                 .id(entityFromDB.getId())
                 .imageUrl(request.getImageUrl())
                 .text(request.getText())
                 .position(request.getPosition())
+                .organization(organizationRepository
+                        .findFirstByOrderById()
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                messageSource.getMessage("organization.not.found", null, Locale.US))))
                 .build();
-
-        if (request.getOrganizationId() == null) slide.setOrganization(entityFromDB.getOrganization());
-        else slide.setOrganization(organizationRepository
-                .findById(request.getOrganizationId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        messageSource.getMessage("organization.not.found", null, Locale.US))));
-
-        return slide;
     }
 
 
+    public Slide requestDTOToEntity(SlideRequestDTO slideRequest) {
+        return Slide.builder()
+                .imageUrl(slideRequest.getImageUrl())
+                .position(slideRequest.getPosition())
+                .text(slideRequest.getText())
+                .organization(organizationRepository.findFirstByOrderById()
+                        .orElseThrow(() -> new EntityNotFoundException("Organization not found.")))
+                .build();
+    }
 }

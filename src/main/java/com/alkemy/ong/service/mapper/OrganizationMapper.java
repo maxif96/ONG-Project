@@ -2,6 +2,7 @@ package com.alkemy.ong.service.mapper;
 
 import com.alkemy.ong.dto.OrganizationRequestDTO;
 import com.alkemy.ong.dto.response.OrganizationResponseDTO;
+import com.alkemy.ong.exception.EmptyListException;
 import com.alkemy.ong.model.Organization;
 import com.alkemy.ong.repository.SlideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class OrganizationMapper {
     @Autowired
     private SlideRepository slideRepository;
 
-    public OrganizationResponseDTO entityToResponseDTO(Organization organization) {
+    public OrganizationResponseDTO entityToResponseDTO(Organization organization) throws EmptyListException {
         return OrganizationResponseDTO
                 .builder()
                 .id(organization.getId())
@@ -32,7 +33,7 @@ public class OrganizationMapper {
                 .createdAt(organization.getCreationTimestamp())
                 .updatedAt(organization.getUpdateTimestamp())
                 .slides(organization.getSlides().stream()
-                        .map(x -> slideMapper.entityToDTO(x)).collect(Collectors.toList()))
+                        .map(x -> slideMapper.entityToResponseDTO(x)).collect(Collectors.toList()))
                 .build();
     }
 
@@ -49,6 +50,7 @@ public class OrganizationMapper {
                 .urlFacebook(organizationDTO.getUrlFacebook())
                 .urlInstagram(organizationDTO.getUrlInstagram())
                 .urlLinkedin(organizationDTO.getUrlLinkedin())
+                .slides(entity.getSlides())
                 .creationTimestamp(entity.getCreationTimestamp())
                 .updateTimestamp(LocalDateTime.now())
                 .build();

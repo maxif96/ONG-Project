@@ -60,7 +60,7 @@ public class Organization {
     @Column(name = "url_instagram")
     private String urlInstagram;
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Slide> slides;
 
     @Column(nullable = false, updatable = false, name = "created_date")

@@ -17,6 +17,6 @@ public class SlideRequestDTO {
     private String text;
     @NotNull(message = "{error.position.empty}")
     private Integer position;
-    private Long organizationId;
+
 
 }
