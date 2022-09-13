@@ -16,7 +16,8 @@ The package structure is made up of the followings packages:
 ## Features
 
 - **Really RESTful** - It follows the best practices
-![carbon (1)](https://user-images.githubusercontent.com/87986166/189948522-242038c9-3ee9-4458-a82e-c0f2586cf676.png)
+
+![carbon (2)](https://user-images.githubusercontent.com/87986166/189948701-4aa0a3fa-f917-492d-b267-5848f65897dc.png)
 
 - **Protected endpoints, register and login** - Using Spring Security
 - **Transversal functionalities** - Using Spring AOP
