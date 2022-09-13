@@ -12,6 +12,17 @@ The package structure is made up of the followings packages:
 
 ![image](https://user-images.githubusercontent.com/87986166/189927036-096b4e5d-6d52-4898-821c-2551117082ad.png)
 
+
+## Features
+
+- **Really RESTful** - It follows the best practices
+- **Protected endpoints, register and login** - Using Spring Security
+- **Transversal functionalities** - Using Spring AOP
+- **Sending mails** - Using Sengrid
+- **Images upload** - Using AWS
+- **Documentated** - With Swagger
+- **Integration tests** - Using JUnit5 and Mockito.
+
 ```bash
 pip install foobar
 ```
