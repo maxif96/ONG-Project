@@ -28,6 +28,9 @@ The package structure is made up of the followings packages:
 Once you have downloaded the proyect and run it with Maven, you can access to the functionalities of the API with the graphic UI of Swagger.
 Just put this url in your browser: http://localhost:8080/swagger-ui.html
 
+You will see something like this: ![image](https://user-images.githubusercontent.com/87986166/189940857-91ca3f7e-8d96-4f6b-9a36-d59f5d321efe.png)
+
+
 ```bash
 pip install foobar
 ```
