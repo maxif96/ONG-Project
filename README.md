@@ -16,6 +16,8 @@ The package structure is made up of the followings packages:
 ## Features
 
 - **Really RESTful** - It follows the best practices
+![carbon (1)](https://user-images.githubusercontent.com/87986166/189948522-242038c9-3ee9-4458-a82e-c0f2586cf676.png)
+
 - **Protected endpoints, register and login** - Using Spring Security
 - **Transversal functionalities** - Using Spring AOP
 - **Sending mails** - Using Sengrid
@@ -28,7 +30,28 @@ The package structure is made up of the followings packages:
 Once you have downloaded the proyect and run it with Maven, you can access to the functionalities of the API with the graphic UI of Swagger.
 Just put this url in your browser: http://localhost:8080/swagger-ui.html
 
-You will see something like this: ![image](https://user-images.githubusercontent.com/87986166/189940857-91ca3f7e-8d96-4f6b-9a36-d59f5d321efe.png)
+You will see something like this:
+
+![image](https://user-images.githubusercontent.com/87986166/189940857-91ca3f7e-8d96-4f6b-9a36-d59f5d321efe.png)
+
+Now, you can access to the differents functionalities: As a admin, you can edit your organization data, add the news, write about you, your motivations, add new members, etcetera. As an user, you can comment on the news, you can also see your data, update or delete it. 
+
+No matter if you are an admin or an user, you need to register. How to do it?
+You need to scroll down until you see the controller called 'user-auth-controller', click on it and some endpoints will unfold:
+
+![image](https://user-images.githubusercontent.com/87986166/189944818-47adeca5-a4d0-490d-be6e-44bfffaeaeb5.png)
+
+Then click on register and then click on try out: 
+
+![image](https://user-images.githubusercontent.com/87986166/189945193-a788c9d5-39fb-49af-99f8-4c7d369493a5.png)
+
+Next you have to complete the fields with your data and press Execute:
+
+![image](https://user-images.githubusercontent.com/87986166/189945857-c1fb72f3-637a-450a-a5d9-17597dda7edc.png)
+
+That will return the token with witch we can access to the rest of functionalities. We just have to copy and past the token on the Header Requeriments called 'Authorization' of the method. We need to write 'Bearer ' before. Like this:
+
+![image](https://user-images.githubusercontent.com/87986166/189947397-c2c69527-fc8d-428c-b136-6778cb470773.png)
 
 
 ```bash
