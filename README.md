@@ -1,6 +1,6 @@
-# Foobar
+# NGO
 
-Foobar is a Python library for dealing with word pluralization.
+This proyect is for a NGO who need to show what they do to the world.
 
 ## Installation
 
