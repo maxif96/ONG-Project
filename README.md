@@ -23,6 +23,11 @@ The package structure is made up of the followings packages:
 - **Documentated** - With Swagger
 - **Integration tests** - Using JUnit5 and Mockito.
 
+## How to use locally
+
+Once you have downloaded the proyect and run it with Maven, you can access to the functionalities of the API with the graphic UI of Swagger.
+Just put this url in your browser: http://localhost:8080/swagger-ui.html
+
 ```bash
 pip install foobar
 ```
