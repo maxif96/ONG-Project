@@ -8,10 +8,12 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@SQLDelete(sql = "UPDATE news SET deleted = true WHERE new_id =?")
+@SQLDelete(sql = "UPDATE news SET deleted = true WHERE id =?")
 @Where(clause = "deleted = false")
 @Getter
 @Setter
@@ -23,7 +25,6 @@ public class News {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "new_id")
     private Long id;
 
     @Column(nullable = false)
@@ -34,24 +35,31 @@ public class News {
     @NotBlank(message = "Content can not be empty.")
     private String content;
 
-    @Column
     private String image;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "category_id")
-    private Categories categoryId;
+    private Category category;
 
-    @Column(name = "create_date", nullable = false, updatable = false)
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+    @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    private LocalDateTime createDate;
 
-    @Column(name = "update_date")
+    @Column(name = "updated_date")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @Column
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 
+    public News(String name, String content, String image, Category category, LocalDateTime date) {
+        this.name = name;
+        this.content = content;
+        this.image = image;
+        this.category = category;
+        this.createDate = date;
+
+    }
 }
