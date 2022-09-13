@@ -1,10 +1,12 @@
-# NGO
+# API Rest made for a NGO.
 
 This proyect is for a NGO who need to show what they do to the world.
 
-## Installation
+## Package Structure
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+The package structure is made up of the followings packages:
+
+![image](https://user-images.githubusercontent.com/87986166/189927036-096b4e5d-6d52-4898-821c-2551117082ad.png)
 
 ```bash
 pip install foobar
