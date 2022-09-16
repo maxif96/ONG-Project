@@ -115,22 +115,27 @@
             <groupId>org.junit.vintage</groupId>
             <scope>test</scope>
         </dependency>
-            </dependencies>
-        
+        <!--        Spring AOP          -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>  
+                <configuration>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>  
-            </plugin>  
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
