@@ -44,12 +44,13 @@ public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberReposi
     }
 
     @Transactional(readOnly = true)
-    public MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException {
+    public MemberPageResponse pagination(Integer pageNumber) throws NotFoundException {
         Page<Member> page = getPage(pageNumber);
+        validatePageNumber(page, pageNumber);
+
         String previousUrl = urlGetPrevious(pageNumber);
         String nextUrl = urlGetNext(page, pageNumber);
 
-        if (pageNumber > page.getTotalPages()) throw new NotFoundException("Page doesn't have elements.");
         return memberMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
 
@@ -64,6 +65,10 @@ public class MemberServiceImpl extends PaginationUtil<Member, Long, MemberReposi
     public void deleteMember(Long id) {
         if (!repository.existsById(id)) throw new EntityNotFoundException("Member with that id not found.");
         repository.deleteById(id);
+    }
+
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
     }
 }
 

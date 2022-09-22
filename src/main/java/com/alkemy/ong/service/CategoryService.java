@@ -12,7 +12,7 @@ public interface CategoryService {
 
     CategoryResponseDTO create(CategoryRequestDTO categoryRequestDTO) throws Exception;
 
-    CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException;
+    CategoryPageResponse pagination(Integer numberOfPage) throws NotFoundException;
 
     List<String> getCategoryNames() throws EmptyListException;
 

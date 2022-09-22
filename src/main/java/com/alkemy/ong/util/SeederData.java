@@ -52,7 +52,7 @@ public class SeederData {
         if (roleRepository.findAll().isEmpty()) createRole();
         if (userRepository.findAll().isEmpty()) createUsers();
         if (categoryRepository.count() < 3) createCategory();
-        if (newsRepository.count() < 100) createNews(100 - newsRepository.count());
+        if (newsRepository.count() < 100) createNews(1000 - newsRepository.count());
     }
 
     public void createRole() {

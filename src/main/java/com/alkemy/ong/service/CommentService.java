@@ -16,7 +16,7 @@ public interface CommentService {
 
     List<CommentResponseDTO> getAll() throws EmptyListException;
 
-    CommentPageResponse getCommentsPage(Integer pageNumber) throws NotFoundException;
+    CommentPageResponse pagination(Integer pageNumber) throws NotFoundException;
 
     void delete(Long id, HttpServletRequest request) throws NotFoundException, UnauthorizedException;
 

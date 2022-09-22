@@ -7,7 +7,6 @@ import com.alkemy.ong.exception.NameAlreadyExists;
 import com.alkemy.ong.service.ActivityService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,7 @@ public class ActivityController {
     @GetMapping("/get-all")
     public ResponseEntity<ActivityPageResponse> getAllWithPage (@RequestParam(defaultValue = "1")
                                                                     Integer pageNumber) throws NotFoundException {
-        ActivityPageResponse pageResponse =activityService.getActivitiesPage(pageNumber);
+        ActivityPageResponse pageResponse = activityService.pagination(pageNumber);
         return ResponseEntity.ok().body(pageResponse);
     }
 

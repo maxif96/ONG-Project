@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MemberService {
 
-    MemberPageResponse getMembersPage(Integer pageNumber) throws NotFoundException;
+    MemberPageResponse pagination(Integer pageNumber) throws NotFoundException;
 
     MemberResponseDTO createMember(MemberRequestDTO memberRequestDTO);
 

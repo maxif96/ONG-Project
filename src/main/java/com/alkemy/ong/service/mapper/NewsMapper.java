@@ -46,7 +46,6 @@ public class NewsMapper {
                 .category(categoryRepository
                         .findById(newsRequestDTO.getCategoryId())
                         .orElseThrow(() -> new EntityNotFoundException("Category doesn't found")))
-                .createDate(LocalDateTime.now())
                 .build();
     }
 

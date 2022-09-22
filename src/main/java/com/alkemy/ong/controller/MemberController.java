@@ -31,7 +31,7 @@ public class MemberController {
     }
     @GetMapping("/get-all")
     public ResponseEntity<MemberPageResponse> getMembersPage(@RequestParam(defaultValue = "1") Integer pageNumber) throws NotFoundException {
-        return ResponseEntity.ok().body(memberService.getMembersPage(pageNumber));
+        return ResponseEntity.ok().body(memberService.pagination(pageNumber));
 }
     @GetMapping
     public ResponseEntity<List<MemberResponseDTO>> getAll() throws EmptyListException {

@@ -14,6 +14,6 @@ public interface ActivityService {
 
     void delete(Long id);
 
-    ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException;
+    ActivityPageResponse pagination(Integer pageNumber) throws NotFoundException;
 
 }
