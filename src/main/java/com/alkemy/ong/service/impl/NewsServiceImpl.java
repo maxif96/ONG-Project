@@ -74,15 +74,12 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
 
     @Transactional(readOnly = true)
     public NewsPageResponse pagination(Integer numberOfPage) throws NotFoundException {
-        if (numberOfPage < 1)
-            throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
-
         Page<News> page = getPage(numberOfPage);
+        validatePageNumber(page, numberOfPage);
+
         String previousUrl = urlGetPrevious(numberOfPage);
         String nextUrl = urlGetNext(page, numberOfPage);
 
-        if (page.getTotalPages() < numberOfPage)
-            throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
         return newsMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
@@ -94,5 +91,8 @@ public class NewsServiceImpl extends PaginationUtil<News, Long, NewsRepository> 
                 .collect(Collectors.toList());
     }
 
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
+    }
 
 }

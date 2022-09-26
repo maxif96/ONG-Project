@@ -30,7 +30,7 @@ public class CategoryController {
 
     @GetMapping("/get-all")
     public ResponseEntity<CategoryPageResponse> getPage (@RequestParam(defaultValue = "1") Integer page) throws NotFoundException {
-        return ResponseEntity.ok().body(categoryService.getAllCategories(page));
+        return ResponseEntity.ok().body(categoryService.pagination(page));
     }
 
     @GetMapping

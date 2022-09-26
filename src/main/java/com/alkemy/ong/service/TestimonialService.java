@@ -1,15 +1,17 @@
 package com.alkemy.ong.service;
 
-import com.alkemy.ong.dto.TestimonialDto;
+import com.alkemy.ong.dto.TestimonialRequestDTO;
 import com.alkemy.ong.dto.response.TestimonialPageResponse;
+import com.alkemy.ong.dto.response.TestimonialResponseDTO;
+import javassist.NotFoundException;
 
 public interface TestimonialService {
 
-    TestimonialDto createTestimonial(TestimonialDto testimonialDto);
+    TestimonialResponseDTO createTestimonial(TestimonialRequestDTO testimonialDto);
 
-    TestimonialDto updateTestimonial(TestimonialDto testimonialDto, Long id);
+    TestimonialResponseDTO updateTestimonial(TestimonialRequestDTO testimonialDto, Long id);
 
-    TestimonialPageResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir);
+    TestimonialPageResponse pagination(Integer numberPage) throws NotFoundException;
 
     void deleteTestimonial(Long id);
 

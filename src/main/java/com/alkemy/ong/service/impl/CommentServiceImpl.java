@@ -65,12 +65,12 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
     }
 
     @Transactional(readOnly = true)
-    public CommentPageResponse getCommentsPage(Integer pageNumber) throws NotFoundException {
+    public CommentPageResponse pagination(Integer pageNumber) throws NotFoundException {
         Page<Comment> page = getPage(pageNumber);
+        validatePageNumber(page, pageNumber);
+
         String previousUrl = urlGetPrevious(pageNumber);
         String nextUrl = urlGetNext(page, pageNumber);
-
-        if (page.getTotalPages() < pageNumber) throw new NotFoundException("Page doesn't have elements");
 
         return commentMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
@@ -98,6 +98,11 @@ public class CommentServiceImpl extends PaginationUtil<Comment, Long, CommentRep
             throw new UnauthorizedException("You don't have authorization to delete this comment");
         repository.deleteById(id);
     }
+
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
+    }
+
 
 
 }

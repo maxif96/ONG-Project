@@ -1,19 +1,18 @@
 package com.alkemy.ong.controller;
 
-import com.alkemy.ong.dto.TestimonialDto;
+import com.alkemy.ong.dto.TestimonialRequestDTO;
 import com.alkemy.ong.dto.response.TestimonialPageResponse;
-import com.alkemy.ong.exception.ApiError;
+import com.alkemy.ong.dto.response.TestimonialResponseDTO;
 import com.alkemy.ong.service.TestimonialService;
 import java.util.Locale;
 import javax.validation.Valid;
+
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import static com.alkemy.ong.util.Constants.*;
 
 @RestController
 @RequestMapping("/testimonials")
@@ -25,34 +24,20 @@ public class TestimonialController {
     @Autowired
     private MessageSource messageSource;
 
-    @GetMapping("/pagination")
-    public TestimonialPageResponse getAllPagination(
-            @RequestParam(value = "pageNo", defaultValue = NUMBER_PAGE_DEFAULT, required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = SIZE_PAGE_DEFAULT , required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = ORDER_BY_DEFAULT, required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = ORDER_DIRECTION_DEFAULT, required = false) String sortDir
-    ){
-        return testimonialService.getAll(pageNo, pageSize, sortBy, sortDir);
+    @GetMapping("/page")
+    public ResponseEntity<TestimonialPageResponse> getAllPagination(@RequestParam Integer pageNumber) throws NotFoundException {
+        return ResponseEntity.ok().body(testimonialService.pagination(pageNumber));
     }
     
-    @PostMapping()
-    public ResponseEntity<?> createTestimonial(@Valid @RequestBody TestimonialDto testimonialDto,  BindingResult result){
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialDto));
+    @PostMapping
+    public ResponseEntity<TestimonialResponseDTO> createTestimonial(@Valid @RequestBody TestimonialRequestDTO testimonialRequestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(testimonialService.createTestimonial(testimonialRequestDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editTestimonial(@Valid @RequestBody TestimonialDto testimonialDto, @PathVariable(value = "id") Long id) {
-        try {
-            TestimonialDto testimonialResponse = testimonialService.updateTestimonial(testimonialDto, id);
-            return ResponseEntity
-                    .ok()
-                    .body(testimonialResponse);
-        } catch (Exception exception) {
-            throw new ApiError(HttpStatus.NOT_FOUND, exception);
-        }
+    public ResponseEntity<TestimonialResponseDTO> editTestimonial(@Valid @RequestBody TestimonialRequestDTO testimonialRequestDTO,
+                                                                  @PathVariable(value = "id") Long id) {
+        return ResponseEntity.ok().body(testimonialService.updateTestimonial(testimonialRequestDTO, id));
     }
     
     @DeleteMapping(path = "/{id}")

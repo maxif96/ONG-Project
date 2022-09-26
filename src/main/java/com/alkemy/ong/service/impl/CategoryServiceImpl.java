@@ -39,16 +39,13 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
     }
 
     @Transactional(readOnly = true)
-    public CategoryPageResponse getAllCategories(Integer numberOfPage) throws NotFoundException {
-        if (numberOfPage < 1)
-            throw new NotFoundException(messageSource.getMessage("resource.not.found", null, Locale.US));
+    public CategoryPageResponse pagination(Integer pageNumber) throws NotFoundException {
+        Page<Category> page = getPage(pageNumber);
+        validatePageNumber(page, pageNumber);
 
-        Page<Category> page = getPage(numberOfPage);
-        String previousUrl = urlGetPrevious(numberOfPage);
-        String nextUrl = urlGetNext(page, numberOfPage);
+        String previousUrl = urlGetPrevious(pageNumber);
+        String nextUrl = urlGetNext(page, pageNumber);
 
-        if (page.getTotalPages() < numberOfPage)
-            throw new NotFoundException(messageSource.getMessage("page.without.elements", null, Locale.US));
         return categoryMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
@@ -73,4 +70,9 @@ public class CategoryServiceImpl extends PaginationUtil<Category, Long, Category
         if (repository.existsById(id)) throw new EntityNotFoundException(" Category with that id was not found.");
         repository.deleteById(id);
     }
+
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
+    }
+
 }

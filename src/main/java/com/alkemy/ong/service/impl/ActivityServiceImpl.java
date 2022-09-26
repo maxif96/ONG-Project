@@ -37,13 +37,13 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
     }
 
     @Transactional(readOnly = true)
-    public ActivityPageResponse getActivitiesPage(Integer pageNumber) throws NotFoundException {
-        if (pageNumber < 1) throw new NotFoundException("Page must be greater than 0");
+    public ActivityPageResponse pagination(Integer pageNumber) throws NotFoundException {
+
         Page<Activity> page = getPage(pageNumber);
+        validatePageNumber(page, pageNumber);
         String previousUrl = urlGetPrevious(pageNumber);
         String nextUrl = urlGetNext(page, pageNumber);
 
-        if (page.getTotalPages() < pageNumber) throw new NotFoundException("Page does not have elements.");
         return activityMapper.buildPageResponse(page.getContent(), previousUrl, nextUrl);
     }
 
@@ -65,6 +65,10 @@ public class ActivityServiceImpl extends PaginationUtil<Activity, Long, Activity
     public void delete(Long id) {
         if (repository.existsById(id)) repository.deleteById(id);
         else throw new EntityNotFoundException("Activity was not found.");
+    }
+
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
     }
 
 }

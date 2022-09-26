@@ -1,31 +1,26 @@
 package com.alkemy.ong.service.impl;
 
-import com.alkemy.ong.dto.TestimonialDto;
+import com.alkemy.ong.dto.TestimonialRequestDTO;
 import com.alkemy.ong.dto.response.TestimonialPageResponse;
-import com.alkemy.ong.exception.ResourceNotFoundException;
+import com.alkemy.ong.dto.response.TestimonialResponseDTO;
 import com.alkemy.ong.model.Testimonial;
 import com.alkemy.ong.repository.TestimonialRepository;
 import com.alkemy.ong.service.TestimonialService;
 import com.alkemy.ong.service.mapper.TestimonialMapper;
+import com.alkemy.ong.util.PaginationUtil;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class TestimonialServiceImpl implements TestimonialService {
-
-    @Autowired
-    private TestimonialRepository testimonialRepository;
+public class TestimonialServiceImpl extends PaginationUtil<Testimonial, Long, TestimonialRepository> implements TestimonialService {
 
     @Autowired
     private TestimonialMapper testimonialMapper;
@@ -34,60 +29,43 @@ public class TestimonialServiceImpl implements TestimonialService {
     private MessageSource messageSource;
 
     @Override
-    public TestimonialDto createTestimonial(TestimonialDto testimonialDto) {
-        Testimonial testimonialEntity = testimonialMapper.testimonialDtoToTestimonial(testimonialDto);
-        Testimonial testimonial = testimonialRepository.save(testimonialEntity);
-        return testimonialMapper.testimonialToTestimonialDto(testimonial);
+    public TestimonialResponseDTO createTestimonial(TestimonialRequestDTO testimonialRequestDTO) {
+        Testimonial testimonial = testimonialMapper.requestDTOToEntity(testimonialRequestDTO);
+        return testimonialMapper.entityToResponseDTO(testimonial);
     }
 
     @Override
-    public TestimonialDto updateTestimonial(TestimonialDto testimonialDto, Long id) {
-        Testimonial testimonial = testimonialRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Testimonial", "idTestimonial", id));
+    public TestimonialResponseDTO updateTestimonial(TestimonialRequestDTO testimonialRequestDTO, Long id) {
+        Testimonial testimonial = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Testimonial with this id not found."));
 
-        testimonialRepository.save(testimonial);
-        Testimonial testimonialEntity = testimonialMapper.testimonialDtoToTestimonial(testimonialDto);
-        return testimonialMapper.testimonialToTestimonialDto(testimonialEntity);
+        Testimonial testimonialToUpdate = testimonialMapper.updateTestimonial(testimonialRequestDTO, testimonial);
+        return testimonialMapper.entityToResponseDTO(repository.save(testimonialToUpdate));
     }
 
-    @Override
-    public TestimonialPageResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
+    @Transactional(readOnly = true)
+    public TestimonialPageResponse pagination(Integer numberPage) throws EntityNotFoundException {
+        Page<Testimonial> page = getPage(numberPage);
+        validatePageNumber(page, numberPage);
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        String previousUrl = urlGetPrevious(numberPage);
+        String nextUrl = urlGetNext(page, numberPage);
 
-        Page<Testimonial> testimonials = testimonialRepository.findAll(pageable);
-
-        List<Testimonial> listOfTestomonials = testimonials.getContent();
-
-        List<TestimonialDto> content = listOfTestomonials
-                .stream()
-                .map(testimonial -> testimonialMapper.testimonialToTestimonialDto(testimonial))
-                .collect(Collectors.toList());
-
-        TestimonialPageResponse testimonialPageResponse = new TestimonialPageResponse();
-        testimonialPageResponse.setContent(content);
-        testimonialPageResponse.setPageNo(testimonials.getNumber());
-        testimonialPageResponse.setPageSize(testimonials.getSize());
-        testimonialPageResponse.setTotalElements(testimonials.getTotalElements());
-        testimonialPageResponse.setTotalPages(testimonials.getTotalPages());
-        testimonialPageResponse.setLastPage(testimonials.isLast());
-        testimonialPageResponse.setFirstPage(testimonials.isFirst());
-        testimonialPageResponse.setNextPage(testimonials.nextOrLastPageable());
-        testimonialPageResponse.setPreviousPage(testimonials.previousOrFirstPageable());
-
-        return testimonialPageResponse;
+        return testimonialMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
 
     @Override
     public void deleteTestimonial(Long id) {
-        Optional<Testimonial> response = testimonialRepository.findById(id);
+        Optional<Testimonial> response = repository.findById(id);
         if (response.isPresent()) {
-            testimonialRepository.deleteById(id);
+            repository.deleteById(id);
         } else {
             throw new EntityNotFoundException(messageSource.getMessage("testimonial.notFound", null, Locale.US));
         }
-
     }
+
+    public void validatePageNumber (Page<?> page, Integer numberPage){
+        if (page.getTotalPages() < numberPage) throw new EntityNotFoundException("Page does not have elements.");
+    }
+
 }

@@ -23,7 +23,6 @@ import java.util.Date;
 @SQLDelete(sql = "UPDATE testimonials SET deleted = true WHERE id =?")
 @Where(clause = "deleted = false")
 @Table(name = "testimonials")
-
 public class Testimonial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,7 +10,6 @@ import com.alkemy.ong.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Locale;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -49,7 +47,7 @@ public class CommentController {
 
     @GetMapping("/get-all")
     public ResponseEntity<CommentPageResponse> getCommentsPage (@RequestParam(defaultValue = "1") Integer pageNumber) throws NotFoundException {
-        return ResponseEntity.ok().body(commentService.getCommentsPage(pageNumber));
+        return ResponseEntity.ok().body(commentService.pagination(pageNumber));
     }
 
     @PutMapping("/{id}")
