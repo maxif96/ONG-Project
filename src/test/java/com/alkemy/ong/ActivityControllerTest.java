@@ -1,7 +1,8 @@
 package com.alkemy.ong;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 
@@ -15,7 +16,7 @@ public class ActivityControllerTest extends ActivityContextTest{
 
     private static final String ACTIVITY_PATH = "/activities";
 
-    @Before
+    @BeforeEach
     public void create(){
         if(activityRepository.findAll().isEmpty()){
             createActivity();

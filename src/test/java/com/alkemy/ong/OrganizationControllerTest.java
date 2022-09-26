@@ -1,9 +1,7 @@
 package com.alkemy.ong;
 
-
-import com.alkemy.ong.model.Organization;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 
@@ -20,7 +18,7 @@ public class OrganizationControllerTest extends OrganizationContextTest {
 
     private static final String ORGANIZATION_PATH = "/organization";
 
-    @Before
+    @BeforeEach
     public void create (){
         if (organizationRepository.findAll().isEmpty()) createOrganization();
     }

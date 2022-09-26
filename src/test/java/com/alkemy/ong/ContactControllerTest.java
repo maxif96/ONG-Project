@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,7 +21,7 @@ public class ContactControllerTest extends ContactContextTest {
 
     private static final String CONTACT_PATH = "/contacts";
     
-    @Before
+    @BeforeEach
     public void create() {
         if (contactRepository.findAll().isEmpty()) {
             createContact();
