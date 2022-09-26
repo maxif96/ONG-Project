@@ -40,14 +40,8 @@ public class TestimonialController {
         return ResponseEntity.ok().body(testimonialService.updateTestimonial(testimonialRequestDTO, id));
     }
     
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> deleteTestimonial(@PathVariable Long id) {
-        try {
-            testimonialService.deleteTestimonial(id);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        
-        return new ResponseEntity<>(messageSource.getMessage("deleted.testimonial", null, Locale.US), HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTestimonial(@PathVariable Long id) {
+        return ResponseEntity.ok().body("Testimonial successfully deleted.");
     }
 }

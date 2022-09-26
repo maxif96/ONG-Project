@@ -28,13 +28,13 @@ public class TestimonialServiceImpl extends PaginationUtil<Testimonial, Long, Te
     @Autowired
     private MessageSource messageSource;
 
-    @Override
+    @Transactional
     public TestimonialResponseDTO createTestimonial(TestimonialRequestDTO testimonialRequestDTO) {
         Testimonial testimonial = testimonialMapper.requestDTOToEntity(testimonialRequestDTO);
         return testimonialMapper.entityToResponseDTO(testimonial);
     }
 
-    @Override
+    @Transactional
     public TestimonialResponseDTO updateTestimonial(TestimonialRequestDTO testimonialRequestDTO, Long id) {
         Testimonial testimonial = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Testimonial with this id not found."));
@@ -54,14 +54,10 @@ public class TestimonialServiceImpl extends PaginationUtil<Testimonial, Long, Te
         return testimonialMapper.buildPage(page.getContent(), previousUrl, nextUrl);
     }
 
-    @Override
+    @Transactional
     public void deleteTestimonial(Long id) {
-        Optional<Testimonial> response = repository.findById(id);
-        if (response.isPresent()) {
-            repository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException(messageSource.getMessage("testimonial.notFound", null, Locale.US));
-        }
+        if (!repository.existsById(id)) throw new EntityNotFoundException("Testimonial with that id not found.");
+        repository.deleteById(id);
     }
 
     public void validatePageNumber (Page<?> page, Integer numberPage){
