@@ -1,5 +1,6 @@
-package com.alkemy.ong;
+package controller;
 
+import context.OrganizationContextTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;

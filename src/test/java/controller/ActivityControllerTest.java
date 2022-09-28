@@ -1,6 +1,7 @@
-package com.alkemy.ong;
+package controller;
 
 
+import context.ActivityContextTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -12,7 +13,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ActivityControllerTest extends ActivityContextTest{
+public class ActivityControllerTest extends ActivityContextTest {
 
     private static final String ACTIVITY_PATH = "/activities";
 
