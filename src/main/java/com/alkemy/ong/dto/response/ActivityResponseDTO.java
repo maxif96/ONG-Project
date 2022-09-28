@@ -1,15 +1,15 @@
 package com.alkemy.ong.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @Builder
 public class ActivityResponseDTO {
 
