@@ -2,14 +2,14 @@ package com.alkemy.ong;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.springframework.security.test.context.support.WithUserDetails;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,6 +25,7 @@ public class OrganizationControllerTest extends OrganizationContextTest {
 
     @Test
     @WithUserDetails("admin")
+    @DisabledOnOs(OS.WINDOWS)
     public void put_organization_with_admin_role_OK() throws Exception {
         mockMvc.perform(put(ORGANIZATION_PATH + "/public")
                         .content(createRequest("nameTest",
@@ -38,7 +39,7 @@ public class OrganizationControllerTest extends OrganizationContextTest {
                                 "Instagram",
                                 "Linkedin"))
                         .contentType(APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.name", equalTo("nameTest")))
                 .andExpect(jsonPath("$.image", equalTo("imageTest")))
@@ -57,7 +58,7 @@ public class OrganizationControllerTest extends OrganizationContextTest {
     @WithUserDetails
     public void should_return_OK_status_code_when_try_to_get_the_organization () throws Exception {
         mockMvc.perform(get(ORGANIZATION_PATH + "/public").contentType(APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.name", notNullValue()))
                 .andExpect(jsonPath("$.image", notNullValue()))
