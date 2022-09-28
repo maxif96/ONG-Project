@@ -1,4 +1,4 @@
-package context;
+package com.alkemy.ong.context;
 
 import com.alkemy.ong.dto.ActivityRequestDTO;
 import com.alkemy.ong.model.Activity;

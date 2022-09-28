@@ -1,7 +1,7 @@
-package controller;
+package com.alkemy.ong.controller;
 
 
-import context.ActivityContextTest;
+import com.alkemy.ong.context.ActivityContextTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

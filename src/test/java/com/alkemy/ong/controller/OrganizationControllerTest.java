@@ -1,11 +1,10 @@
-package controller;
+package com.alkemy.ong.controller;
 
-import context.OrganizationContextTest;
+import com.alkemy.ong.context.OrganizationContextTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.springframework.security.test.context.support.WithUserDetails;
+
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -26,7 +25,6 @@ public class OrganizationControllerTest extends OrganizationContextTest {
 
     @Test
     @WithUserDetails("admin")
-    @DisabledOnOs(OS.WINDOWS)
     public void put_organization_with_admin_role_OK() throws Exception {
         mockMvc.perform(put(ORGANIZATION_PATH + "/public")
                         .content(createRequest("nameTest",

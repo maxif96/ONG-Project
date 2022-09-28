@@ -1,12 +1,12 @@
-package controller;
+package com.alkemy.ong.controller;
 
+import com.alkemy.ong.context.ContactContextTest;
 import com.alkemy.ong.model.Contact;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-import context.ContactContextTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
