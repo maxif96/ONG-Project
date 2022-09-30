@@ -25,7 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -37,15 +37,23 @@ public class ActivityServiceImplTest {
     @MockBean
     private ActivityRepository mockRepository;
 
+    private ActivityRequestDTO activityRequestDTO;
+
+    @BeforeEach
+    private void setUp () {
+        activityRequestDTO = ActivityRequestDTO.builder()
+                .name("testName")
+                .content("testContent")
+                .image("testImage")
+                .build();
+    }
+
     
     // ------ CREATE METHOD ------
     
     @Test
     void should_return_NameAlreadyExistsException_if_try_to_create_an_activity_with_an_existing_activity_name() {
         when(mockRepository.existsByName(anyString())).thenReturn(true);
-        ActivityRequestDTO activityRequestDTO = ActivityRequestDTO.builder()
-                .name("anyName")
-                .build();
 
         assertThrows(NameAlreadyExists.class, () -> activityService.create(activityRequestDTO));
 
@@ -53,12 +61,6 @@ public class ActivityServiceImplTest {
 
     @Test
     void should_return_an_ActivityResponseDTO_when_create_an_Activity() throws NameAlreadyExists {
-        ActivityRequestDTO activityRequestDTO = ActivityRequestDTO.builder()
-                .name("anyName")
-                .content("contentTest")
-                .image("imageTest")
-                .build();
-
         when(mockRepository.save(any())).thenReturn(new Activity());
 
         assertEquals(ActivityResponseDTO.class, activityService.create(activityRequestDTO).getClass());
@@ -81,11 +83,6 @@ public class ActivityServiceImplTest {
                 .image("imageTest")
                 .build();
 
-        ActivityRequestDTO activityRequestDTO = ActivityRequestDTO.builder()
-                .name("testName")
-                .content("contentTest")
-                .image("imageTest")
-                .build();
 
         when(mockRepository.save(any())).thenReturn(activity);
 
@@ -153,9 +150,7 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    void should_return_an_ActivityResponseDTO_after_the_update () {
-        ActivityRequestDTO requestDTO = ActivityRequestDTO.builder().build();
-
+    void should_return_an_updated_ActivityResponseDTO_after_the_update () {
         Activity activityFromDatabase = Activity.builder()
                 .id(1L)
                 .name("name")
@@ -164,26 +159,49 @@ public class ActivityServiceImplTest {
                 .build();
 
         when(mockRepository.findById(1L)).thenReturn(Optional.ofNullable(activityFromDatabase));
-        when(mockRepository.save()).thenReturn();
+
 
         ActivityResponseDTO activityResponseDTO = ActivityResponseDTO.builder()
                 .id(1L)
-                .name("editedName")
+                .name("testName")
                 .image("image")
                 .content("content")
                 .build();
 
-        ActivityRequestDTO activityRequestDTO = ActivityRequestDTO.builder()
-                .name("editedName")
-                .image("image")
-                .content("content")
-                .build();
 
-        assertEquals(activityResponseDTO.toString(), activityService.update(1L, activityRequestDTO).toString());
+        when(mockRepository.save(any())).thenReturn(Activity.builder()
+                .id(1L)
+                .name(activityResponseDTO.getName())
+                .image(activityResponseDTO.getImage())
+                .content(activityResponseDTO.getContent())
+                .build());
 
+        assertEquals(activityResponseDTO.getName(), activityService.update(1L, activityRequestDTO).getName());
 
 
     }
+
+    // ------ DELETE METHOD ------
+
+    @Test
+    void should_throw_an_EntityNotFoundException_if_does_not_found_an_activity () {
+        when(mockRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> activityService.delete(1L));
+
+    }
+
+    @Test
+    void should_successfully_delete_an_Activity () {
+        when(mockRepository.existsById(1L)).thenReturn(true);
+
+        activityService.delete(1L);
+
+        verify(mockRepository, times(1)).deleteById(1L);
+
+    }
+
+
 
 
 
