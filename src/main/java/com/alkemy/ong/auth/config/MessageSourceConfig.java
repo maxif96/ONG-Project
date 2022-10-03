@@ -1,4 +1,4 @@
-package com.alkemy.ong.config;
+package com.alkemy.ong.auth.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
